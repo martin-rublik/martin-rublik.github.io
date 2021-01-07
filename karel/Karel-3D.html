@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
+<style>body{margin:0;background:black}</style></head><body>
+<!--<div id=0 style='height:100%;width:100%'>-->
+<canvas id=1 tabindex='1' style='border:0'></canvas>
+<textarea id=2 readonly autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false'
+    style='position:absolute;left:0px;top:608px;width:925px;height:90px;border:0;background:#121212;color:#a0a0be;resize:none;font-size:12px'>
+</textarea>
+<input id=3 type=text value='>ENGLISH' onkeypress='return runDialog(event)'
+	style='position:absolute;left:0px;top:685px;width:925px;height:26px;border:0;background:#121212;color:#e0e0e0'/>
+<textarea id=4 autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false'
+    style='position:absolute;left:464px;top:0px;width:461px;height:608px;border:0;background:#121212;color:#e0e0e0;resize:none;'>
+</textarea>
+<textarea id=5 autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false'
+    style='position:absolute;left:925px;top:0px;width:100px;height:709px;border:0;background:#121240;color:#e0e0e0;resize:none;color:#a0a0be;font-size:10px'>
+</textarea>
+<!--</div>-->
+<script>
+//diacritics
+String.prototype.removeDiacritics = function(){var diacritics = [
+        [/[\300-\306]/g, 'A'],[/[\340-\346\]/g, 'a'],[/[\310-\313]/g, 'E'],
+        [/[\350-\353]/g, 'e'],[/[\314-\317]/g, 'I'],[/[\354-\357]/g, 'i'],
+        [/[\322-\330]/g, 'O'],[/[\362-\370]/g, 'o'],[/[\331-\334]/g, 'U'],
+        [/[\371-\374]/g, 'u'],[/[\321]/g, 'N'],[/[\361]/g, 'n'],
+        [/[\307]/g, 'C'],[/[\347]/g, 'c'],[/á/g, 'a'],[/ĺ/g, 'l'],];
+	var s = this;
+    var lng = diacritics.length;
+	for(var j=0; j<lng; j++){s = s.replace(diacritics[j][0], diacritics[j][1])}return s;
+}
+// -DATA-
+// znacka - od spodu na hor
+znacka= [0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,3,0,0,0,0,0,0,
+		 0,0,0,0,0,3,1,3,0,0,0,0,0,
+		 0,0,0,0,3,1,2,1,3,0,0,0,0,
+		 0,0,0,3,1,2,1,2,1,3,0,0,0,
+		 0,0,0,0,3,1,2,1,3,0,0,0,0,
+		 0,0,0,0,0,3,1,3,0,0,0,0,0,
+		 0,0,0,0,0,0,3,0,0,0,0,0,0];
+shadow=[
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,1,2,1,0,0,0,0,0,
+		0,0,0,0,1,2,3,2,1,0,0,0,0,
+		0,0,0,1,2,3,4,3,2,1,0,0,0,
+		0,0,0,2,3,4,4,4,3,2,0,0,0,
+		0,0,0,1,2,3,4,3,2,1,0,0,0,
+		0,0,0,0,1,2,3,2,1,0,0,0,0,
+		0,0,0,0,0,1,2,1,0,0,0,0,0
+		];
+// tehla - od spodu na hor
+tehla = [0,0,0,0,0,0,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,4,1,0,0,0,0,0,
+		 0,0,0,0,1,2,4,2,1,0,0,0,0,
+		 0,0,0,1,2,2,4,2,2,1,0,0,0,
+		 0,0,1,2,2,2,4,2,2,2,1,0,0,
+		 0,1,2,4,2,4,3,4,2,4,2,1,0,
+		 1,2,2,2,4,3,3,3,4,2,2,2,1,
+		 1,2,2,4,3,3,3,3,3,4,2,2,1,
+		 1,2,4,3,3,3,3,3,3,3,4,2,1,
+		 1,4,3,3,3,3,3,3,3,3,3,4,1,
+		 1,3,3,3,3,3,3,3,3,3,3,3,1,
+		 0,1,3,3,3,3,3,3,3,3,3,1,0,
+		 0,0,1,3,3,3,3,3,3,3,1,0,0,
+		 0,0,0,1,3,3,3,3,3,1,0,0,0,
+		 0,0,0,0,1,3,3,3,1,0,0,0,0,
+		 0,0,0,0,0,1,3,1,0,0,0,0,0,
+		 0,0,0,0,0,0,1,0,0,0,0,0,0];
+// wall, stena
+wall  = [0,0,0,0,0,0,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,4,1,0,0,0,0,0,
+		 0,0,0,0,1,2,4,3,1,0,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,1,2,2,2,4,3,3,3,1,0,0,
+		 0,1,2,2,2,2,4,3,3,3,3,1,0,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,2,4,3,3,3,3,3,1,
+		 1,2,2,2,2,4,2,4,3,3,3,3,1,
+		 1,2,2,2,4,2,2,3,4,3,3,3,1,
+		 1,2,2,4,2,2,2,3,3,4,3,3,1,
+		 1,2,4,2,2,2,4,3,3,3,4,3,1,
+		 1,4,2,2,2,4,4,4,3,3,3,4,1,
+		 1,2,2,2,4,2,4,3,4,3,3,3,1,
+		 0,1,2,4,2,2,4,3,3,4,3,1,0,
+		 0,0,1,4,2,2,4,3,3,4,1,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,2,4,3,3,1,0,0,0,
+		 0,0,0,1,2,4,2,4,3,1,0,0,0,
+		 0,0,0,1,4,2,2,3,4,1,0,0,0,
+		 0,0,0,1,2,2,2,3,3,1,0,0,0,
+		 0,0,0,0,1,2,2,3,1,0,0,0,0,
+		 0,0,0,0,0,1,2,1,0,0,0,0,0,
+		 0,0,0,0,0,0,1,0,0,0,0,0,0];
+// most - bridge		 
+most  = [0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,3,0,0,0,0,0,0,
+		 0,0,0,0,0,3,3,3,0,0,0,0,0,
+		 0,0,0,0,3,3,1,3,3,0,0,0,0,
+		 0,0,0,3,3,1,2,1,3,3,0,0,0,
+		 0,0,0,3,1,2,2,2,1,3,0,0,0,
+		 0,0,0,1,2,2,2,2,2,1,0,0,0,
+		 0,0,0,0,1,2,2,2,1,0,0,0,0,
+		 0,0,0,0,0,1,2,1,0,0,0,0,0,
+		 0,0,0,0,0,0,1,0,0,0,0,0,0];
+// karel pred - od spodu na hor
+karel = [0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,1,1,0,0,0,0,0,
+		 0,0,0,0,0,1,3,3,1,0,0,0,0,
+		 0,0,0,0,0,1,3,3,3,1,0,0,0,
+		 0,0,0,0,0,0,1,1,1,1,1,0,0,
+		 0,0,1,1,0,0,0,1,1,2,1,0,0,
+		 0,1,3,3,1,0,0,1,2,1,0,0,0,
+		 0,1,3,3,1,1,0,2,1,2,0,0,0,
+		 0,0,1,1,1,1,1,1,2,1,0,0,0,
+		 0,0,0,1,1,2,1,2,1,2,0,0,0,
+		 0,0,0,1,2,1,0,1,2,1,0,0,0,
+		 0,0,0,2,1,2,0,2,1,2,0,0,0,
+		 0,0,0,1,2,1,0,1,2,1,0,0,0,
+		 0,0,0,2,1,2,0,2,1,2,0,0,0,
+		 0,0,0,1,2,1,0,1,1,1,0,0,0,
+		 0,0,0,2,1,2,1,1,2,2,1,0,0,
+		 0,0,0,1,2,1,2,1,2,1,1,1,0,
+		 0,0,0,2,1,2,2,2,1,1,2,1,0,
+		 0,0,0,1,2,2,2,2,1,2,1,1,0,
+		 0,0,1,2,2,2,4,2,1,1,2,1,0,
+		 0,1,2,2,2,4,2,2,1,2,1,1,0,
+		 1,1,2,2,4,4,4,2,1,1,1,1,0,
+		 1,1,2,4,4,2,2,2,1,2,1,1,0,
+		 0,1,2,4,2,2,2,2,1,2,2,1,0,
+		 0,1,2,4,2,2,2,1,3,1,2,1,0,
+		 0,1,2,2,2,2,1,3,3,3,1,1,0,
+		 0,1,2,2,2,1,3,3,3,3,3,1,0,
+		 0,1,2,2,1,3,2,1,2,3,1,0,0,
+		 0,1,2,1,3,3,1,1,1,1,0,0,0,
+		 0,1,1,3,3,1,2,1,2,1,0,0,0,
+		 0,1,3,3,1,2,2,1,2,1,0,0,0,
+		 0,0,1,1,2,2,1,1,2,1,0,0,0,
+		 0,0,0,1,2,2,2,1,2,1,0,0,0,
+		 0,0,0,1,1,2,1,3,1,1,0,0,0,
+		 0,0,0,1,2,1,3,3,3,1,0,0,0,
+		 0,0,0,1,1,3,3,3,1,0,0,0,0,
+		 0,0,0,1,3,3,3,1,0,0,0,0,0,
+		 0,0,0,0,1,3,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,0,0,0,0,0,0,0];
+// PRAVA NOHA karel pred
+karel_p=[0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,1,1,1,0,0,
+		 0,1,1,1,1,0,0,0,1,3,3,1,0,
+		 1,3,3,2,1,0,0,0,1,3,3,3,1,
+		 1,3,2,1,2,0,0,0,0,1,2,1,1,
+		 1,1,1,2,1,0,0,0,1,2,1,2,1,
+		 0,0,2,1,2,0,0,1,2,1,2,1,0,
+		 0,0,1,2,1,0,0,2,1,2,0,0,0,
+		 0,0,2,1,2,0,0,1,2,1,0,0,0,
+		 0,0,1,2,1,0,0,2,1,2,0,0,0,
+		 0,0,0,1,2,1,0,1,1,1,0,0,0,
+		 0,0,0,2,1,2,1,2,1,2,1,0,0,
+		 0,0,0,1,2,1,1,1,2,2,2,1,0,
+		 0,0,0,2,1,3,3,1,1,2,2,1,0,
+		 0,0,0,1,2,1,1,1,2,1,2,1,0,
+		 0,0,1,2,2,2,4,2,1,1,2,1,0,
+		 0,1,2,2,2,4,2,2,1,2,1,1,0,
+		 0,1,2,2,4,4,4,2,1,1,1,1,0,
+		 0,1,2,4,4,2,2,2,1,2,1,1,0,
+		 0,1,2,4,2,2,2,2,1,2,2,1,0,
+		 0,1,2,4,2,2,2,1,3,1,2,1,0,
+		 0,1,2,2,2,2,1,3,3,3,1,1,0,
+		 0,1,2,2,2,1,3,3,3,3,3,1,0,
+		 0,1,2,2,1,3,2,1,2,3,1,0,0,
+		 0,1,2,1,3,3,1,1,1,1,0,0,0,
+		 0,1,1,3,3,1,2,1,2,1,0,0,0,
+		 0,1,3,3,1,2,2,1,2,1,0,0,0,
+		 0,0,1,1,2,2,1,1,2,1,0,0,0,
+		 0,0,0,1,2,2,2,1,2,1,0,0,0,
+		 0,0,0,1,1,2,1,3,1,1,0,0,0,
+		 0,0,0,1,2,1,3,3,3,1,0,0,0,
+		 0,0,0,1,1,3,3,3,1,0,0,0,0,
+		 0,0,0,1,3,3,3,1,0,0,0,0,0,
+		 0,0,0,0,1,3,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,0,0,0,0,0,0,0];
+// LAVA NOHA karel pred
+karel_l=[0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,1,1,1,1,0,0,0,0,0,
+		 0,0,0,1,3,3,3,1,0,0,0,0,0,
+		 0,0,0,1,3,1,1,1,0,0,0,0,0,
+		 0,0,0,1,1,1,1,2,0,0,0,0,0,
+		 0,0,0,0,0,0,1,1,0,0,0,0,0,
+		 0,0,0,0,0,2,1,2,0,0,0,0,0,
+		 0,0,0,0,0,1,2,1,0,0,0,0,0,
+		 0,0,0,0,1,0,1,2,1,0,0,0,0,
+		 0,0,0,0,1,0,2,1,2,0,0,0,0,
+		 0,0,0,0,1,0,1,2,1,0,0,0,0,
+		 0,0,0,0,2,1,2,1,2,1,0,0,0,
+		 0,0,0,0,1,2,0,2,1,2,0,0,0,
+		 0,0,0,1,2,1,0,1,1,1,0,0,0,
+		 0,0,0,2,1,2,1,2,1,2,1,0,0,
+		 0,0,0,1,2,1,2,2,1,2,1,1,0,
+		 0,0,0,2,1,2,2,2,1,2,1,3,1,
+		 0,0,0,1,2,2,2,2,1,2,2,1,1,
+		 0,0,1,2,2,2,4,2,1,2,2,2,1,
+		 0,1,2,2,2,4,2,2,1,2,1,1,1,
+		 0,1,2,2,4,4,4,2,1,1,1,2,1,
+		 1,1,2,4,4,2,2,2,1,2,1,1,1,
+		 1,1,2,4,2,2,2,2,1,2,2,1,0,
+		 1,1,2,4,2,2,2,1,3,1,2,1,0,
+		 0,1,2,2,2,2,1,3,3,3,1,1,0,
+		 0,1,2,2,2,1,3,3,3,3,3,1,0,
+		 0,1,2,2,1,3,2,1,2,3,1,0,0,
+		 0,1,2,1,3,3,1,1,1,1,0,0,0,
+		 0,1,1,3,3,1,2,1,2,1,0,0,0,
+		 0,1,3,3,1,2,2,1,2,1,0,0,0,
+		 0,0,1,1,2,2,1,1,2,1,0,0,0,
+		 0,0,0,1,2,2,2,1,2,1,0,0,0,
+		 0,0,0,1,1,2,1,3,1,1,0,0,0,
+		 0,0,0,1,2,1,3,3,3,1,0,0,0,
+		 0,0,0,1,1,3,3,3,1,0,0,0,0,
+		 0,0,0,1,3,3,3,1,0,0,0,0,0,
+		 0,0,0,0,1,3,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,0,0,0,0,0,0,0];	
+// karel zad - od spodu na hor		 
+karelb= [0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,1,1,0,0,0,0,
+		 0,0,0,0,0,0,1,3,3,1,0,0,0,
+		 0,0,0,0,0,0,1,1,1,1,1,0,0,
+		 0,0,0,0,0,0,0,2,1,2,3,1,0,
+		 0,0,0,4,4,0,0,1,2,1,3,1,0,
+		 0,0,4,4,3,4,0,2,1,2,1,0,0,
+		 0,0,4,4,4,4,4,1,2,1,0,0,0,
+		 0,0,0,2,4,2,4,2,1,2,0,0,0,
+		 0,0,0,4,2,4,3,1,2,1,0,0,0,
+		 0,0,0,2,4,2,4,2,1,2,0,0,0,
+		 0,0,0,4,2,4,0,1,2,1,0,0,0,
+		 0,0,0,2,4,2,0,2,4,2,0,0,0,
+		 0,0,0,4,2,4,0,4,4,4,0,0,0,
+		 0,0,0,2,4,2,4,2,4,2,1,0,0,
+		 0,0,0,4,2,4,2,2,4,2,2,1,0,
+		 0,0,0,2,4,2,2,2,4,2,2,1,1,
+		 0,0,0,4,2,2,2,2,4,2,1,1,1,
+		 0,0,1,2,2,2,2,2,4,1,2,1,0,
+		 0,1,2,2,2,2,2,2,4,1,1,1,0,
+		 0,1,2,2,2,2,2,2,4,1,2,1,0,
+		 0,1,2,2,2,2,2,2,4,2,1,1,0,
+		 0,1,2,2,2,2,2,2,4,2,2,1,0,
+		 0,1,2,2,2,2,2,4,3,4,2,1,0,
+		 0,1,2,2,2,2,4,3,3,3,4,1,0,
+		 0,1,2,2,2,4,3,3,3,3,3,1,0,
+		 0,1,2,2,4,3,2,4,2,3,1,0,0,
+		 0,1,2,4,3,3,4,4,4,1,0,0,0,
+		 0,1,4,3,3,4,2,4,2,1,0,0,0,
+		 0,1,3,3,4,2,2,4,2,1,0,0,0,
+		 0,0,1,1,2,2,2,4,2,1,0,0,0,
+		 0,0,0,1,2,2,2,4,2,1,0,0,0,
+		 0,0,0,1,2,2,4,3,4,1,0,0,0,
+		 0,0,0,1,2,4,3,3,3,1,0,0,0,
+		 0,0,0,1,4,3,3,3,1,0,0,0,0,
+		 0,0,0,1,3,3,3,1,0,0,0,0,0,
+		 0,0,0,0,1,3,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,0,0,0,0,0,0,0];
+// PRAVA NOHA karel zad - od spodu na hor		 
+karelb_p=[0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,1,1,1,0,0,
+		 0,0,0,0,0,0,0,0,1,3,3,1,0,
+		 0,4,4,0,0,0,0,0,1,1,3,3,1,
+		 0,4,2,4,0,0,0,0,0,1,1,3,1,
+		 4,2,2,4,0,0,0,0,0,1,2,3,1,
+		 4,2,2,4,0,0,0,0,0,2,1,1,1,
+		 4,2,4,0,0,0,0,0,0,1,2,0,0,
+		 4,4,2,4,0,0,0,0,0,1,1,0,0,
+		 0,0,4,2,4,0,0,2,1,2,0,0,0,
+		 0,0,2,4,2,0,0,1,2,1,0,0,0,
+		 0,0,0,2,4,2,0,2,4,2,0,0,0,
+		 0,0,0,4,2,4,0,4,4,4,0,0,0,
+		 0,0,0,2,4,2,4,2,4,2,1,0,0,
+		 0,0,0,4,2,4,2,2,1,1,2,1,0,
+		 0,0,0,2,4,2,2,2,1,1,2,1,0,
+		 0,0,0,4,2,2,1,1,2,1,2,1,0,
+		 0,0,1,2,2,2,1,1,1,2,2,1,0,
+		 0,1,2,2,2,2,2,1,2,1,1,1,0,
+		 0,1,2,2,2,2,2,2,1,2,1,1,0,
+		 0,1,2,2,2,2,2,2,4,1,1,1,0,
+		 0,1,2,2,2,2,2,2,4,2,2,1,0,
+		 0,1,2,2,2,2,2,4,3,4,2,1,0,
+		 0,1,2,2,2,2,4,3,3,3,4,1,0,
+		 0,1,2,2,2,4,3,3,3,3,3,1,0,
+		 0,1,2,2,4,3,2,4,2,3,1,0,0,
+		 0,1,2,4,3,3,4,4,4,1,0,0,0,
+		 0,1,4,3,3,4,2,4,2,1,0,0,0,
+		 0,1,3,3,4,2,2,4,2,1,0,0,0,
+		 0,0,1,1,2,2,2,4,2,1,0,0,0,
+		 0,0,0,1,2,2,2,4,2,1,0,0,0,
+		 0,0,0,1,2,2,4,3,4,1,0,0,0,
+		 0,0,0,1,2,4,3,3,3,1,0,0,0,
+		 0,0,0,1,4,3,3,3,1,0,0,0,0,
+		 0,0,0,1,3,3,3,1,0,0,0,0,0,
+		 0,0,0,0,1,3,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,0,0,0,0,0,0,0];
+// LAVA NOHA karel zad - od spodu na hor		 
+karelb_l=[0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,0,0,0,0,
+		 0,0,0,0,0,0,0,0,0,1,1,0,0,
+		 0,0,4,4,4,0,0,0,1,2,3,1,0,
+		 0,0,4,3,3,4,0,0,1,1,3,3,1,
+		 0,4,3,3,4,0,0,0,1,1,3,3,1,
+		 0,4,3,3,4,0,0,0,1,2,1,1,1,
+		 0,0,4,4,4,2,0,0,2,1,0,0,0,
+		 0,0,0,0,4,2,4,0,1,2,0,0,0,
+		 0,0,0,0,0,4,2,1,1,2,0,0,0,
+		 0,0,0,0,0,0,1,1,2,4,0,0,0,
+		 0,0,0,0,0,1,2,2,4,2,0,0,0,
+		 0,0,0,0,2,1,0,4,4,4,0,0,0,
+		 0,0,0,2,1,2,4,2,4,2,1,0,0,
+		 0,0,0,1,2,4,2,2,4,2,2,1,0,
+		 0,0,0,2,4,2,2,2,4,2,2,1,0,
+		 0,0,0,4,2,2,2,2,4,2,1,1,1,
+		 0,0,1,2,2,2,2,2,4,1,2,1,1,
+		 0,1,2,2,2,2,2,2,4,1,1,1,1,
+		 1,1,2,2,2,2,2,2,4,1,2,1,0,
+		 1,1,2,2,2,2,2,2,4,2,1,1,0,
+		 1,1,2,2,2,2,2,2,4,2,2,1,0,
+		 0,1,2,2,2,2,2,4,3,4,2,1,0,
+		 0,1,2,2,2,2,4,3,3,3,4,1,0,
+		 0,1,2,2,2,4,3,3,3,3,3,1,0,
+		 0,1,2,2,4,3,2,4,2,3,1,0,0,
+		 0,1,2,4,3,3,4,4,4,1,0,0,0,
+		 0,1,4,3,3,4,2,4,2,1,0,0,0,
+		 0,1,3,3,4,2,2,4,2,1,0,0,0,
+		 0,0,1,1,2,2,2,4,2,1,0,0,0,
+		 0,0,0,1,2,2,2,4,2,1,0,0,0,
+		 0,0,0,1,2,2,4,3,4,1,0,0,0,
+		 0,0,0,1,2,4,3,3,3,1,0,0,0,
+		 0,0,0,1,4,3,3,3,1,0,0,0,0,
+		 0,0,0,1,3,3,3,1,0,0,0,0,0,
+		 0,0,0,0,1,3,1,0,0,0,0,0,0,
+		 0,0,0,0,0,1,0,0,0,0,0,0,0];
+//Commands - Prikazy ! -> ak pridas premennu, skontroluj funkciu preloz() - if you add new constant array, check function preloz()
+p_jazyk = ['SLOVENSKY','ENGLISH','ESPANOL','DEUTSCH']; //Languages
+p_set = 1; //Default language
+p_urob = ['UROB','DO','HACER','MACHE']; p_krat = ['KRAT','TIMES','VECES','MAL']; p_hurob = ['*UROB','*DO','*HACER','*MACHE'];
+p_ak = ['AK','IF','SI','WENN']; p_tak = ['TAK','THEN','LUEGO','DANN']; p_inak = ['INAK','ELSE','OTRO','SONST']; p_hak = ['*AK','*IF','*SI','*WENN'];
+p_kym = ['KYM','WHILE','MIENTRAS','SOLANGE']; p_rob = ['ROB','WORK','TRABAJO','JOB']; p_hkym = ['*KYM','*WHILE','*MIENTRAS','*SOLANGE'];
+p_vlavo = ['VLAVO-BOK','LEFT-SIDE','IZQUIERDA','LINKS']; p_vpravo = ['VPRAVO-BOK','RIGHT-SIDE','DERECHO','RECHTS'];
+p_pip = ['PIP','BEEP','BIP','PIEP']; p_oznac = ['OZNAC','MARK','MARCAR','MARKE']; p_odznac = ['ODZNAC','UNMARK','DESMARCAR','MARKE-WEG']; 
+p_poloz = ['POLOZ','PUT','PONER','STEIN']; p_zdvihni = ['ZDVIHNI','TAKE','TOMAR','STEIN-WEG']; p_krok = ['KROK','WALK','PASEO','GEHE'];
+p_miestnost = ['MIESTNOST','ROOM','HABITACION','RAUM']; p_slovnik = ['SLOVNIK','DICTIONARY','DICCIONARIO','LEXIKON'];
+p_prikaz = ['PRIKAZ','COMMAND','COMANDO','BEFEHL']; p_zaciatok = ['ZACIATOK','BEGIN','COMIENZO','ANFANG']; p_koniec = ['KONIEC','END','FIN','ENDE'];
+p_nie = ['NIE','NOT','NO','NICHT']; p_je = ['JE','IS','ES','IST']; p_volno = ['VOLNO','FREE','LIBRE','FREI'];  p_sever = ['SEVER','NORTH','NORTE','NORD'];
+p_tehla = ['TEHLA','BRICK','LADRILLO','STEIN']; p_znacka = ['ZNACKA','MARK','MARCA','MARKE']; p_stena = ['STENA','WALL','PARED','PFEILER']; 
+p_pravda = ['PRAVDA','TRUE','VERDAD','WAHR']; p_nepravda = ['NEPRAVDA','FALSE','FALSO','FALSCH']; p_jama = ['JAMA','PIT','POZO','LOCH'];
+p_rychlo = ['RYCHLO','FAST','RAPIDO','SCHNELL']; p_pomaly = ['POMALY','SLOW','LENTO','LANGSAM']; p_stop = ['STOP','STOP','DETENER','HALT'];
+p_rychlejsie = ['RYCHLEJSIE','FASTER','RAPIDOS','SCHNELLER'];
+p_save = ['ULOZ','SAVE','GUARDAR','SPEICHERN']; p_load = ['NACITAJ','LOAD','CARGA','LADEN']; p_most = ['MOST','BRIDGE','PUENTE','BRUECKE'];
+// Texts
+w_direct = ['PRIAME OVLÁDANIE','DIRECT CONTROL','CONTROL DIRECTO','DIREKTE KONTROLLE'];
+w_directK = ['P,MEDZERNÍK - Z,C','P,SPACEBAR - Z,C','P,ESPACIADOR - Z,C','P,LEERTASTE - Z,C'];
+w_directK1 = ['O,M - I,N  /  S  /  B','O,M - I,N  /  S  /  B','O,M - I,N  /  S  /  B','O,M - I,N  /  S  /  B'];
+w_directK2 = ['W,A,D,ŠÍPKY  /  Q - E','W,A,D,ARROWS  /  Q - E','W,A,D,FLECHAS  /  Q - E','W,A,D,PFEILE  /  Q - E'];
+w_aktivit = ['AKTIVÍT','MOVEMENTS','MOVIMIENTOS','AKTIVITÄTEN']; w_znaciek = ['ZNAČIEK','MARKS','MARCAS','MARKEN']; 
+w_tehliciek = ['TEHLIČIEK','BRICKS','LADRILLOS','STEINE'];
+w_nepoznam = ['NEPOZNAM','UNKNOWN','DESCONOCIDO','UNBEKANNT']; w_chyba = ['CHYBA','ERROR','ERROR','FEHLER'];
+// Errors
+w_ch_urob = ['CHYBA, ZA UROB OCAKAVAM CISLO A SLOVO KRAT.','ERROR, AFTER DO EXPECT NUMBER AND WORD TIMES.','ERROR, LA PALABRA HACER ESPERO NUMBER Y PALABRA VECES.'
+			,'FEHLER, NACH MACHEN ERWARTEN NUMMER UND WORT MAL.'];
+w_ch_akinak = ['CHYBA, ZA AK PO INAK OCAKAVAM UKONCENIE *AK.','ERROR, AFTER IF AND ELSE EXPECT AT END *IF.','ERROR, LA PALABRA SI Y OTRO ESPERO AL FINAL *SI.'
+			,'FEHLER, NACH WENN UND SONST ERWARTEN AM ENDE *WENN.'];
+w_ch_ak = ['CHYBA, ZA AK OCAKAVAM PODMIENKU A SLOVO TAK.','ERROR, AFTER IF EXPECT CONDITION AND WORD THEN.','ERROR, LA PALABRA SI ESPERO CONDICION Y PALABRA LUEGO.'
+			,'FEHLER, NACH WENN ERWARTEN BEDINGUNG UND WORT DANN.'];
+w_ch_hak = ['CHYBA, ZA AK OCAKAVAM UKONCENIE *AK.','ERROR, AFTER IF EXPECT AT END *IF.','ERROR, LA PALABRA SI ESPERO AL FINAL *SI.'
+			,'FEHLER, NACH WENN ERWARTEN AM ENDE *WENN.'];
+w_ch_kym = ['CHYBA, ZA KYM OCAKAVAM PODMIENKU A SLOVO ROB.','ERROR, AFTER WHILE EXPECT WORD WORK.','ERROR, LA PALABRA MIENTRAS ESPERO PALABRA TRABAJO.'
+			,'FEHLER, NACH SOLANGE ERWARTEN WORT JOB.'];
+w_ch_hkym = ['CHYBA, ZA KYM OCAKAVAM UKONCENIE *KYM.','ERROR, AFTER WHILE EXPECT AT END *WHILE.','ERROR, LA PALABRA MIENTRAS ESPERO AL FINAL *MIENTRAS.'
+			,'FEHLER, NACH SOLANGE ERWARTEN AM ENDE *SOLANGE.'];
+
+w_intro = ['KAREL-3D v JavaScript-e vytvoril Viktor Mlej, v13.1 ( Inšpirácia z PMD 85-2 rok 1986 V3.2 )\n',
+		   'KAREL-3D in JavaScript created by Viktor Mlej, v13.1 ( Inspired from PMD 85-2 year 1986 V3.2 )\n',
+		   'KAREL-3D en JavaScript creado por Viktor Mlej, v13.1 ( Inspirado de PMD 85-2 año 1986 V3.2 )\n',
+		   'KAREL-3D in JavaScript erstellt von Viktor Mlej, v13.1 ( Inspiriert von PMD 85-2 jahr 1986 V3.2 )\n'];
+//Dictionary - Slovnik
+w_prikazy = [':-D',':-P',':-*',':=('];
+w_prikazy[0] = 'SLOVNIK, KROK, VLAVO-BOK, VPRAVO-BOK, PIP, OZNAC, ODZNAC, POLOZ, ZDVIHNI, STENA, SEVER, MOST\n';
+w_prikazy[0] +='MIESTNOST [1,2], PRAVDA(*1), NEPRAVDA(*2), <môj_prikaz> [2..999], <prikaz> [2..999], UROB 2[..999] KRAT <prikazy> *UROB\n';
+w_prikazy[0] +='AK [NIE] JE TEHLA [..ZNACKA, STENA, VOLNO, JAMA, MOST, *1*2] TAK <prikazy> [INAK <prikazy>] *AK\n';
+w_prikazy[0] +='KYM [NIE] JE TEHLA [..ZNACKA, STENA, VOLNO, JAMA, MOST, *1*2] ROB <prikazy> *KYM, RYCHLO, RYCHLEJSIE, POMALY\n';
+w_prikazy[0] +='Len prave horne okno: PRIKAZ <moj_prikaz> ZACIATOK <prikazy> KONIEC (Moze byt viac krat pod sebou), STOP [STOP:]; NACITAJ, ULOZ';
+
+w_prikazy[1] = 'DICTIONARY, WALK, LEFT-SIDE, RIGHT-SIDE, BEEP, MARK, UNMARK, PUT, TAKE, WALL, NORTH, BRIDGE\n';
+w_prikazy[1] +='ROOM [1,2], TRUE(*1), FALSE(*2), <main_command> [2..999], <command> [2..999], DO 2[..999] TIMES <commands> *DO\n';
+w_prikazy[1] +='IF IS [NOT] BRICK [..MARK, WALL, FREE, PIT, BRIDGE, *1*2] THEN <commands> [ELSE <commands>] *IF\n';
+w_prikazy[1] +='WHILE IS [NOT] BRICK [..MARK, WALL, FREE, PIT, BRIDGE, *1*2] WORK <commands> *WHILE, FAST, FASTER, SLOW\n';
+w_prikazy[1] +='Only on top-right window: COMMAND <main_command> BEGIN <commands> END (It can be more underneath), STOP [STOP:]; LOAD, SAVE';
+
+w_prikazy[2] = 'DICCIONARIO, PASEO, IZQUIERDA, DERECHO, BIP, MARCAR, DESMARCAR, PONER, TOMAR, PARED, NORTE, PUENTE\n';
+w_prikazy[2] +='HABITACION [1,2], VERDAD(*1), FALSO(*2), <mis_commando> [2..999], <commando> [2..999], HACER 2[..999] VECES <commandos> *HACER\n';
+w_prikazy[2] +='SI ES [NO] LADRILLO [..MARCA, PARED, LIBRE, POZO, PUENTE, *1*2] LUEGO <cmds> [OTRO <cmds>] *SI\n';
+w_prikazy[2] +='MIENTRAS ES [NO] LADRILLO [..MARCA, PARED, LIBRE, POZO, PUENTE, *1*2] TRABAJO <commandos> *MIENTRAS, RAPIDO, RAPIDOS, LENTO\n';
+w_prikazy[2] +='Sólo en la ventana de cmds: COMMANDO <mis_commando> COMIENZO <commandos> FIN (Puede ser más abajo), DETENER [DETENER:]; CARGA, GUARDAR';
+
+w_prikazy[3] = 'LEXIKON, GEHE, LINKS, RECHTS, PIEP, MARKE, MARKE-WEG, STEIN, STEIN-WEG, PFEILER, NORD, BRUECKE\n';
+w_prikazy[3] +='RAUM [1,2], WAHR(*1), FALSCH(*2), <mein_befehl> [2..999], <befehl> [2..999], MACHE 2[..999] MAL <befehle> *MACHE\n';
+w_prikazy[3] +='WENN IST [NICHT] STEIN [..MARKE, PFEILER, FREI, LOCH, BRUECKE, *1*2] DANN <bfhl> [SONST <bfhl>] *WENN\n';
+w_prikazy[3] +='SOLANGE IST [NICHT] STEIN [..MARKE, PFEILER, FREI, LOCH, BRUECKE, *1*2] JOB <befehle> *SOLANGE, SCHNELLER, SCHNELL, LANGSAM\n';
+w_prikazy[3] +='Befehlsspalte: BEFEHL <mein_befehl> ANFANG <befehle> ENDE (Es kann noch mehr sein), HALT [HALT:]; LADEN, SPEICHERN';
+
+var stp=3; var clr='#121212'; var plot_color='#e0e0e0'; var change=!0;
+//screen
+var ax=155; var ay=203;
+for(var b=ax,d=[],f=0;f<=b;f++){d[f]=[]}
+var arr=d;
+// miestnost - room
+miesx=16; miesy=8; miesz=15; // vyska
+miest=[];
+// karel pozicia
+karelX=karelY=karelZ=karelS=1 // Smer 1 2 3 4
+polkrok=striedaj=0; rychlo=false; rychlejsie=false;
+// kolizie
+kolizia_stena = kolizia_volno = kolizia_znacka = kolizia_tehla = kolizia_most = 0;
+kolizia_diera = kolizia_diera_pred = vyska_tehal = kolizia_most_vstup = kolizia_most_vyskoc = 0; 
+status_pravda = false;
+// ine premenne - others
+bricksnumber=marksnumber=stepsnumber=0; 
+cmd=[]; dca=false;//direct control
+pipni=0 ; save=true; global_break=false;
+// -INITIAL-
+var txt_lang=p_jazyk[0];
+for(var i=1; i<p_jazyk.length; i++){txt_lang += ', '+p_jazyk[i];};
+var dialog='';
+var techm = document.getElementById('5');
+var commd = document.getElementById('4');
+var dialg = document.getElementById('3');
+var infob = document.getElementById('2');
+var graph = document.getElementById('1'); 
+graph.width=ax*stp; graph.height=ay*stp; s=graph.getContext('2d');
+
+// send all actual positions to graphics db ( db use screen() )
+redraw();
+
+// -START-
+s.textAlign='left'; s.textBaseline='bottom';
+var g=[];
+addEventListener('keydown',function(a){g[a.keyCode] = !0;},!1);
+addEventListener('keyup',  function(a){delete g[a.keyCode];},!1);
+//h(); //initial call screen() and start low time h() for resize if changes window
+loadroom();
+if(commd.value==''){
+	window.setTimeout(function(){
+		commd.value = p_prikaz[p_set]+' cvz '+p_zaciatok[p_set]+'\n '+p_vlavo[p_set]+' 2\n'+p_koniec[p_set]+'\n';
+		infob.value = w_intro[p_set];
+		dialg.focus();},5)
+}else{window.setTimeout(function(){infob.value=w_intro[p_set]; dialg.focus();},5)}
+k(); //initial call k() if key is press, and high time call k() 
+
+// -FUNCTIONS- 
+function plot(a0,b0,a1,b1){ // A,B -> A,B line
+	var amin, amax, bmin, bmax, jmin, jmax, imin, imax, sig;
+	if(a0<a1){amin=a0; amax=a1}else{amin=a1; amax=a0}
+	if(b0<b1){bmin=b0; bmax=b1}else{bmin=b1; bmax=b0}
+
+	var aroz=amax-amin; broz=bmax-bmin;
+	if(aroz<broz){imin=bmin; imax=bmax; jmin=a0; jmax=a1; sig=1;}
+	         else{imin=amin; imax=amax; jmin=b0; jmax=b1; sig=0;}
+	var mstep=(jmax-jmin)/(imax-imin);
+	
+	for (var i=imin;i<=imax;i++){
+		var jcela=Math.round(jmin); jmin=jmin+mstep;
+		if(sig==0)arr[i][jcela]=plot_color; else arr[jcela][i]=plot_color;
+	}
+}
+function bplot(sirka,obj,a0,b0,color1,color2,color3,color4,mirror){ 
+	var mir=0;
+	if(mirror==1)mir=(sirka-1)*-1;else mir=0;
+	var x0=a0, y0=b0, lng=obj.length;
+	for(var i0=0;i0<lng;i0++){
+			 if(obj[i0]==1)arr[x0-mir][y0]=color1;
+		else if(obj[i0]==2)arr[x0-mir][y0]=color2;
+		else if(obj[i0]==3)arr[x0-mir][y0]=color3;
+		else if(obj[i0]==4)arr[x0-mir][y0]=color4;
+		if(mirror==1)mir=mir+2;	
+		x0++;if(x0-a0>=sirka){x0=a0;y0--;if(mirror==1)mir=(sirka-1)*-1;}
+    }
+}
+function dropShadow(width, sprite, col1, col2, col3, col4, x, y, z){
+	var lng=sprite.length;
+	for(var _z=z-1;_z>=0;_z--){
+		var r=miestnost(x, y, _z, 999);
+		if((r>0 && r<3) || r>14){          //id 3-14 = karel
+			if(r==40 || r==30)break;       //id 40 = another bridge, id 30 = wall
+			var nz=_z;
+			if(r==2)nz--;                  //id 2 = mark
+			var x0= 47 + (6*(x-1)) - (6*(y-1));
+			var y0= 64 + (6*(x-1)) + (6*(y-1)) - (4*(nz));
+			var a0=x0;
+			for(var i0=0;i0<lng;i0++){
+				if(x0<=ax && y0<=ay){
+					var col={r:0,g:0,b:0};
+					if(sprite[i0]>0){col=hexToRgb(arr[x0][y0], true);}					
+					if(sprite[i0]==1){    
+					    if(col.r-col1.r>=0){col.r-=col1.r;}else{col.r=0;}
+						if(col.g-col1.g>=0){col.g-=col1.g;}else{col.g=0;}
+						if(col.b-col1.b>=0){col.b-=col1.b;}else{col.b=0;}
+					}else if(sprite[i0]==2){
+						if(col.r-col2.r>=0){col.r-=col2.r;}else{col.r=0;}
+						if(col.g-col2.g>=0){col.g-=col2.g;}else{col.g=0;}
+						if(col.b-col2.b>=0){col.b-=col2.b;}else{col.b=0;}
+					}else if(sprite[i0]==3){
+						if(col.r-col3.r>=0){col.r-=col3.r;}else{col.r=0;}
+						if(col.g-col3.g>=0){col.g-=col3.g;}else{col.g=0;}
+						if(col.b-col3.b>=0){col.b-=col3.b;}else{col.b=0;}
+					}else if(sprite[i0]==4){
+						if(col.r-col4.r>=0){col.r-=col4.r;}else{col.r=0;}
+						if(col.g-col4.g>=0){col.g-=col4.g;}else{col.g=0;}
+						if(col.b-col4.b>=0){col.b-=col4.b;}else{col.b=0;}
+					}
+					if(sprite[i0]>0){arr[x0][y0]=rgbToHex(col.r, col.g, col.b);}
+				}
+				x0++;if(x0-a0>=width){x0=a0;y0--;}
+			}
+			break; // exit for _z 
+		}
+	}
+}
+function hexToRgb(hex, asObj) {
+  return (function(res) {
+    return res == null ? null : (function(parts) {
+      return !asObj ? parts : { r : parts[0], g : parts[1], b : parts[2] }
+    }(res.slice(1,4).map(function(val) { return parseInt(val, 16); })));
+  }(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)));
+}
+function rgbToHex(r, g, b) {
+  return (function(values) {
+    return '#' + values.map(function(intVal) {
+      return (function(hexVal) {
+        return hexVal.length == 1 ? '0' + hexVal : hexVal;
+      }(intVal.toString(16)));
+    }).join('');
+  }(arguments.length === 1 ? Array.isArray(r) ? r : [r.r, r.g, r.b] : [r, g, b]))
+}
+function index3(x3,y3,z3){return(x3+((y3-1)*miesx))+((z3-1)*(miesx*miesy))}
+function miestnost(x,y,z,set){ // set 999 = get - return parameter, 0 = clear position
+	var gets=0;
+	if(x>miesx || y>miesy || z>miesz+1 || x<1 || y<1 || z<1 )return 999;
+	if(set==999){gets=miest[index3(x,y,z)];if(gets==null)return 0; else return gets;}
+	else{
+		miest[index3(x,y,z)]=set;
+		var mz=z+8; if(mz>miesz+1)mz=miesz+1; // set max z
+		if(set==30)for(m_z=z+1;m_z<mz;m_z++)miest[index3(x,y,m_z)]=null; // clear bridges on top
+	}
+}
+function clear_screen(){ //poits
+	bricksnumber=marksnumber=0;
+	for(var i=0;i<=ax;i++)for(var j=0;j<=ay;j++)arr[i][j]=clr;
+}
+function redraw(){
+	clear_screen();
+	//room inter - miestnost
+	plot_color='#909090';
+	plot(53,1,53,52); // |
+	plot(53,52,149,148); //    \
+	plot(5,100,53,52); // /
+	// room outer - miestnost
+	plot_color='#e0e0e0';
+	plot(5,30,5,100);plot(149,78,149,148); // ||
+	plot(5,30,34,1); // /	
+	plot(5,100,101,196); // \
+	plot(101,196,149,148); //    /	
+	plot(72,1,149,78); //    \
+			
+	var roomdata=''; // tech zapis miestnosti		
+	// objekty	(hneda = #67442d hexcolortool.com )
+	var tmzb=0, tmz=0, tmzm=0, tmzk=0, tmzw=0;
+	for(var j1=1;j1<=miesy;j1++){ //Y
+		for(var i1=1;i1<=miesx;i1++){ //X
+			tmz=tmzm=tmzk=tmzw=0;
+			var pozX = 47 + (6*(i1-1)) - (6*(j1-1));
+			
+			for(var k1=1;k1<=miesz+1;k1++){ //Z
+				var indx=index3(i1,j1,k1); tmzb=0;
+				if(miest[indx]>0){											
+					var pozY = 64 + (6*(i1-1)) + (6*(j1-1)) - (4*(k1-1));			
+					
+					if(miest[indx]==1){ 															     //brick
+						bricksnumber++; tmz=k1;
+						bplot(13,tehla,pozX,pozY,'#d0d0b0','#252510','#303010','#a9a990',0); //'#e0e0d0','#252510','#303010','#b0b090'			
+					}else if(miest[indx]==30){ 														     //wall 
+						tmzw=k1;
+						bplot(13,wall,pozX,pozY,'#a0a0b0','#252535','#303050','#808090',0);
+					}else if(miest[indx]==2 || (kolizia_znacka==1 && miest[indx]>=3 && miest[indx]<=14 )){ //mark
+						marksnumber++; tmzm=k1;
+						bplot(13,znacka,pozX,pozY,'#d0e0e0','#102525','#103030','#d0e0e0',0);
+					}else if(miest[indx]==40 || (kolizia_most==1 && miest[indx]>=3 && miest[indx]<=14 )){  //bridge
+						tmzb=k1;
+						//shadow
+						var col1={r:12, g:12, b:12}; var col2={r:17, g:17, b:17};
+						var col3={r:22, g:22, b:22}; var col4={r:27, g:27, b:27};
+						dropShadow(13,shadow,col1,col2,col3,col4,i1,j1,k1);
+						//draw
+						bplot(13,most,pozX,pozY,'#b37059','#77543d','#57341d','#87644d',0);
+					}				
+					//karel 
+					if(miest[indx]>=3 && miest[indx]<=6){ // pol krok
+						if(polkrok>0){
+							var calX, calY;
+								 if(polkrok==1){calY= pozY +3; calX= pozX -3; if(striedaj==0)miest[indx]=7;else miest[indx]=9}
+							else if(polkrok==2){calY= pozY +3; calX= pozX +3; if(striedaj==0)miest[indx]=10;else miest[indx]=8}
+							else if(polkrok==3){calY= pozY -3; calX= pozX +3; if(striedaj==0)miest[indx]=11;else miest[indx]=13}
+							else if(polkrok==4){calY= pozY -3; calX= pozX -3; if(striedaj==0)miest[indx]=14;else miest[indx]=12}
+							else {calX=pozX; calY=pozY;}
+							// striedaj nohy
+							if(striedaj==0)striedaj=1;else striedaj=0;
+							
+							// pol kroky
+							// pred kroky
+							if(miest[indx] == 7){ //Karel prava (prava noha)
+								bplot(13,karel_p,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',0);}
+							else if(miest[indx] == 8){ //Karel prava - otoceny (lava noha)
+								bplot(13,karel_p,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',1);}
+							else if(miest[indx] == 9){ //Karel lava (lava noha)
+								bplot(13,karel_l,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',0);}
+							else if(miest[indx] == 10){ //Karel lava - otoceny (prava noha)
+								bplot(13,karel_l,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',1);}
+							// zad kroky	
+							else if(miest[indx] == 11){ //Karel zad prava (prava noha)
+								bplot(13,karelb_p,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',0);}
+							else if(miest[indx] == 12){ //Karel zad prava - otoceny (lava noha)
+								bplot(13,karelb_p,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',1);}
+							else if(miest[indx] == 13){ //Karel zad lava (lava noha)
+								bplot(13,karelb_l,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',0);}
+							else if(miest[indx] == 14){ //Karel zad lava - otoceny (prava noha)
+								bplot(13,karelb_l,calX,calY,'#d0d0e0','#101035','#101040','#b0b0d0',1);}
+						} else {
+							// normalne kroky
+							if(miest[indx] == 3){ //Karel
+								bplot(13,karel,pozX,pozY,'#d0d0e0','#101035','#101040','#b0b0d0',0);tmzk=k1;}
+							else if(miest[indx] == 4){ //Karel otoceny
+								bplot(13,karel,pozX,pozY,'#d0d0e0','#101035','#101040','#b0b0d0',1);tmzk=k1;}
+							else if(miest[indx] == 5){ //Karel zo zadu
+								bplot(13,karelb,pozX,pozY,'#d0d0e0','#101035','#101040','#b0b0d0',0);tmzk=k1;}
+							else if(miest[indx] == 6){ //Karel otoceny zo zadu
+								bplot(13,karelb,pozX,pozY,'#d0d0e0','#101035','#101040','#b0b0d0',1);tmzk=k1;}
+						}
+					}
+				}
+				if(tmzb>0)roomdata=roomdata+'X.'+i1+'-Y.'+j1+'-ZB.'+tmzb+'\n'; //bridge
+			}
+			if(tmzw>0)roomdata=roomdata+'X.'+i1+'-Y.'+j1+'-ZS.'+tmzw+'\n'; else //wall
+			if(tmzm>0)roomdata=roomdata+'X.'+i1+'-Y.'+j1+'-ZZ.'+tmzm+'\n'; else //mark
+			if(tmz>0)roomdata=roomdata+'X.'+i1+'-Y.'+j1+'-ZT.'+tmz+'\n'; //brick
+			if(tmzk>0)roomdata=roomdata+'X.'+i1+'-Y.'+j1+'-ZK.'+tmzk+'\n'; //karel
+	}	}
+	techm.value=p_miestnost[p_set]+':\n'+roomdata;
+}
+function k(){
+	var isFocused=(document.activeElement===graph);
+	if(isFocused){
+		pipni=0; dialog=''; var cmd_c=0;
+		38 in g && (delete g[38],cmd[0]=p_krok[p_set],cmd_c=1); // up - krok
+		87 in g && (delete g[87],cmd[0]=p_krok[p_set],cmd_c=1); // W - krok 
+		65 in g && (delete g[65],cmd[0]=p_vlavo[p_set],cmd_c=1); // A - left
+		37 in g && (delete g[37],cmd[0]=p_vlavo[p_set],cmd_c=1); // left
+		40 in g && (delete g[40],cmd[0]=p_vlavo[p_set], cmd[1]=p_vlavo[p_set], cmd[2]=p_krok[p_set], cmd[3]=p_vlavo[p_set], cmd[4]=p_vlavo[p_set],cmd_c=5); // dole - cuvni
+		68 in g && (delete g[68],cmd[0]=p_vpravo[p_set],cmd_c=1); // D - right
+		39 in g && (delete g[39],cmd[0]=p_vpravo[p_set],cmd_c=1); // right
+		80 in g && (delete g[80],cmd[0]=p_poloz[p_set],cmd_c=1); //P - put
+		32 in g && (delete g[32],cmd[0]=p_poloz[p_set],cmd_c=1); //space - put
+		90 in g && (delete g[90],cmd[0]=p_zdvihni[p_set],cmd_c=1); //Z - take
+		89 in g && (delete g[89],cmd[0]=p_zdvihni[p_set],cmd_c=1); //Y - take
+		67 in g && (delete g[67],cmd[0]=p_zdvihni[p_set],cmd_c=1); //C - take
+		79 in g && (delete g[79],cmd[0]=p_oznac[p_set],cmd_c=1); //O - mark
+		77 in g && (delete g[77],cmd[0]=p_oznac[p_set],cmd_c=1); //M - mark
+		73 in g && (delete g[73],cmd[0]=p_odznac[p_set],cmd_c=1); //I - unmark
+		78 in g && (delete g[78],cmd[0]=p_odznac[p_set],cmd_c=1); //N - unmark
+		81 in g && (delete g[81],cmd[0]=p_vlavo[p_set], cmd[1]=p_krok[p_set], cmd[2]=p_vpravo[p_set],cmd_c=3); //Q -ukrok
+		69 in g && (delete g[69],cmd[0]=p_vpravo[p_set], cmd[1]=p_krok[p_set], cmd[2]=p_vlavo[p_set],cmd_c=3); //E -ukrok
+		83 in g && (delete g[83],cmd[0]=p_stena[p_set],cmd_c=1); //S wall
+		66 in g && (delete g[66],cmd[0]=p_most[p_set],cmd_c=1); //B bridge - most
+		
+		if(cmd_c>0){rr_arch = cmd.slice(); commands(cmd,cmd_c,cmd_c);cmd_c=0;}
+		if(!dca){dca=true;change=!0;}
+	} else {	
+		if(dca){dca=false; change=!0; g.splice(0,g.length);}
+	}
+  // if status change then screen()
+  change && !rychlo && (screen(),change=!1);
+  requestAnimationFrame(k, 1);
+}
+function screen(){ // call from k() when key press, and low time from h() screen resizer
+	miestnost(karelX,karelY,karelZ,karel_smer(karelS)); //karel re-set 
+	redraw(); //send set data to screen db
+  
+	//graph.width=document.getElementById('0').offsetWidth;//$('#0').innerWidth();
+	//graph.height=document.getElementById('0').offsetHeight;//$('#0').innerHeight();	
+	for(var i=ax;i--;)
+		for(var j=ay;j--;){
+			s.fillStyle=arr[i][j];
+			s.fillRect(i*stp,j*stp,stp,stp);
+		}
+	
+	s.fillStyle='#cfcfcf';s.font='12px Helvetica';
+	s.fillText(w_aktivit[p_set]+': ' + stepsnumber,20,480);
+	s.fillText(w_znaciek[p_set]+': ' + marksnumber,20,500);
+	s.fillText(w_tehliciek[p_set]+': ' + bricksnumber,20,520); //s.fillText('DEBUG: ' + status_pravda, 40, 540);
+	s.fillStyle='#cfcf70';
+	s.fillText(p_jazyk[p_set],20,560);
+	s.fillStyle='#cfcfcf';s.font='11px Helvetica';
+	s.fillText(txt_lang,20,580);
+	s.font='12px Helvetica';
+  
+	//info on top
+	if(dca){s.fillStyle='#cfcf70';s.fillText(w_direct[p_set],320,40);
+		s.font='11px Helvetica'; s.fillStyle='#cfcfcf'; 
+		s.fillText(w_directK[p_set],320,60); s.fillText(w_directK1[p_set],320,75); s.fillText(w_directK2[p_set],320,90);}	
+}
+function runDialog(e){ 
+    if (e.keyCode==13){
+		setTimeout(function(){saveroom()},0); //save room to local storage	
+		stepsnumber=0;
+
+		dialog = dialg.value; 
+		dialog = dialog.replace(/,/g,''); dialog = dialog.replace(/\./g,''); dialog = dialog.toUpperCase();
+		dialog = dialog.removeDiacritics();
+		if(dialog.charAt(0)=='>'){var n=dialog.length-1; dialog=dialog.substr(1, n);}
+				
+		//dialog commands
+		var rr=dialog.split(' '); pipni = 0; 
+		rr = rr.filter(function(n){return n!=undefined && n!=''}); 
+		rr_arch = rr.slice(); // slice kopiruje db inak je to klon co kopiruje kazdu zmenu
+		var rl = rr.length; dialg.value = '>';
+		if(rl==0||rr[0]=='STOP'||rr[0]=='BREAK')
+			global_break=true; // stop program from dialog
+		else
+			commands(rr,rl,rl); 		
+		
+		return false;
+    }
+}
+function commands(r,rek,org){
+	var rnext=r.slice(); var reknext=rek; var orgnext=org; 
+	var repeater = true; 
+	while( repeater ){
+		repeater = false; var sett=50;
+		var ignore=0; //ms 90
+		if(global_break){
+			global_break=false; reknext=0;}
+		var vrattelo=[]; // vlastne prikazy	
+		var ri=orgnext-reknext; //alert('povel ' + rnext[ri]);
+			
+		kolizie();
+		
+		// vynimka - padanie robota do jamy
+		if(kolizia_diera==1){ 	
+			miestnost(karelX,karelY,karelZ,0); //old pos clear
+			karelZ--; 		
+			if(miestnost(karelX,karelY,karelZ,999)==2)kolizia_znacka = 1; else
+			if(miestnost(karelX,karelY,karelZ,999)==40)kolizia_most = 1;
+			change = !0; 
+			
+			if(rychlejsie && sett!=0)sett=1;
+			if(rychlo){
+				sett=0; repeater=true; //commands(rnext,reknext,orgnext);
+			}else{
+				if(sett==1){repeater=true; //commands(rnext,reknext,orgnext); 
+				}else{ 
+					setTimeout(function(){commands(rnext,reknext,orgnext)},sett);}
+			}
+		}else{
+			// opakovanie
+			if(rnext[ri]==p_urob[p_set]){var n=0;         // skontroluj pocet > 0
+				reknext--; arch_ric = 0; abort = false;
+				for(ric=ri+1;ric<orgnext && !abort;ric++){  // vytiahni udaj pocet > 0
+					reknext--; 
+					if(rnext[ric]==p_urob[p_set]){dialog=w_ch_urob[p_set];pipni=1;txtarea(dialog);}
+					if(rnext[ric]==p_krat[p_set]||rnext[ric]==p_hurob[p_set]){abort=true;}
+					if(rnext[ric]!=' '&&rnext[ric]!=''){n=Number(rnext[ric]);n--; 
+						rnext[ric]=String(n);n++;arch_ric=ric;abort=true;}
+				}
+				ri = orgnext - reknext;  // nove ri pre pokracovanie 
+				if(n<=0){ //ak nie je pocet vacsi ako 0, najdi a skoc na *urob //alert('nula');
+					ri = orgnext - reknext; var zasobnik=0; abort = false;
+					for(ric=ri;ric<=orgnext && !abort;ric++){
+						reknext--;
+						if(rnext[ric]==p_hurob[p_set]){ 							  //nastav za *urob
+							if(zasobnik==0){ 
+								if(arch_ric!=0){rnext[arch_ric]=rr_arch[arch_ric];} //vrat stary udaj kolko krat opakovat
+								abort = true
+							} else {zasobnik--;}} 
+						if(rnext[ric]==p_urob[p_set]){zasobnik++;}
+					}
+				}
+				ri=orgnext-reknext; sett=50; // nove ri pre pokracovanie 
+			}		
+			if (rnext[ri]==p_hurob[p_set]){ // vrat sa na urob a ten v dalsom cykle rozhodne
+				var n=0; var zasobnik=0; abort = false; sett=1;
+				for(ric=ri-1;ric>=0 && !abort; ric--){
+					n++; 
+					if(rnext[ric]==p_urob[p_set]){if(zasobnik==0){abort = true}else{zasobnik--;}}
+					if(rnext[ric]==p_hurob[p_set]){zasobnik++;}
+				}
+				if(abort){reknext=reknext+n+1;}
+			}
+
+			// podmienka AK
+			if(rnext[ri]==p_inak[p_set]){ // narazim na INAK pred AK - preskoc na *AK
+				abort=false; var zasobnik=0; sett=1;
+				for(ric=ri+1;ric<orgnext && !abort;ric++){	//najdi *ak
+					reknext--;
+					if(rnext[ric]==p_hak[p_set]){
+						if(zasobnik==0)abort=true;else zasobnik--;
+					}
+					if(rnext[ric]==p_ak[p_set])zasobnik++;
+				}
+				if(!abort){dialog=w_ch_akinak[p_set]; pipni=1; txtarea(dialog);}
+				else{ ri = orgnext - reknext; } // nove ri pre pokracovanie (*AK, INAK)
+			}
+			if(rnext[ri]==p_ak[p_set]){
+				abort=false; set_no=false; set_tehla=false; set_znacka=false; set_stena=false; set_volno=false; set_pravda=false;
+				set_nepravda=false; set_jama=false; set_most=false;
+				for(ric=ri+1;ric<orgnext && !abort;ric++){ // najdi slova za AK
+					reknext--; return_set(rnext[ric]);
+					if(rnext[ric]==p_tak[p_set])abort = true; // pokracuj do konca s tak a v dalsom behu mas dalsie prikazy napr AK, KYM, UROB, ..
+				}
+				ri = orgnext - reknext;  // nove ri pre pokracovanie (TAK)
+				if(!abort){dialog=w_ch_ak[p_set]; pipni=1; txtarea(dialog);}
+						
+				if(abort){ //pokracovat alebo preskocit na *AK ?
+					abort=check_set(); // false = nic sa neudeje, program ide dalej, true = jump
+					if(abort){ // najdi *AK a pokracuj od neho
+						abort = false; var zasobnik=0;
+						for(ric=ri+1;ric<orgnext && !abort;ric++){	//najdi *ak (inak)
+							reknext--;
+							if(rnext[ric]==p_hak[p_set]){
+								if(zasobnik==0)abort = true;else zasobnik--}
+							if(rnext[ric]==p_inak[p_set]&&zasobnik==0)abort = true;
+							if(rnext[ric]==p_ak[p_set])zasobnik++;
+						}
+						if(!abort){dialog=w_ch_hak; pipni=1; txtarea(dialog);}
+						else{ ri = orgnext - reknext; } // nove ri pre pokracovanie (*AK, INAK)
+					}
+				}
+				sett=0;
+			}
+			// podmienka KYM
+			if(rnext[ri]==p_hkym[p_set]){ // narazim na *KYM pred KYM - vrat sa na KYM
+				var n=0; var zasobnik=0; abort = false; sett=1;
+				for(ric=ri-1;ric>=0 && !abort; ric--){
+					n++; 
+					if(rnext[ric]==p_kym[p_set]){if(zasobnik==0)abort = true;else zasobnik--;}
+					if(rnext[ric]==p_hkym[p_set]){zasobnik++;}
+				}
+				if(abort){reknext=reknext+n+1;}
+			}
+			if(rnext[ri]==p_kym[p_set]){
+				abort=false; set_no=false; set_tehla=false; set_znacka=false; set_stena=false; set_volno=false; set_pravda=false;
+				set_nepravda=false; set_jama=false; set_most=false;
+				for(ric=ri+1;ric<orgnext && !abort;ric++){ // najdi slova za KYM
+					reknext--; return_set(rnext[ric]);
+					if(rnext[ric]==p_rob[p_set])abort = true; // pokracuj do konca s ROB a v dalsom behu mas dalsie prikazy napr AK, KYM, UROB, ..
+				}
+				ri=orgnext-reknext;  // nove ri pre pokracovanie (ROB)
+				if(!abort){dialog=w_ch_kym[p_set]; pipni=1; txtarea(dialog);}	
+				if(abort){ //pokracovat alebo preskocit na *KYM ?
+					abort=check_set(); // false = nic sa neudeje, program ide dalej, true = jump
+					if(abort){ // najdi *KYM a pokracuj od neho
+						abort = false; var zasobnik=0;
+						for(ric=ri+1;ric<orgnext && !abort;ric++){	//najdi *KYM 
+							reknext--;
+							if(rnext[ric]==p_hkym[p_set]){if(zasobnik==0)abort=true;else zasobnik--;}
+							if(rnext[ric]==p_kym[p_set])zasobnik++;
+						}
+						if(!abort){dialog=w_ch_hkym[p_set]; pipni=1; txtarea(dialog);}
+						else ri=orgnext-reknext; // nove ri pre pokracovanie (*KYM)
+					}
+				}
+				sett=0;
+			}
+			
+			// normalny chod
+			if(reknext>0){ 
+				miestnost(karelX,karelY,karelZ,0); //karel old pos clear
+				
+					 if(rnext[ri]==p_vlavo[p_set]) {karelS++; if(karelS==5){karelS=1}; change = !0}
+				else if(rnext[ri]==p_vpravo[p_set]){karelS--; if(karelS==0){karelS=4}; change = !0}
+				else if(rnext[ri]==p_sever[p_set]&&karelS==3){sett=0}
+				else if(rnext[ri]==p_sever[p_set]&&(karelS==2||karelS==4)){karelS=3; change = !0}
+				else if(rnext[ri]==p_sever[p_set]&&(karelS==1)){karelS=2; change=!0; reknext=reknext+1}
+				
+				else if(rnext[ri]==p_pip[p_set]) {beep()}
+				else if(rnext[ri]==p_oznac[p_set]){if(kolizia_most==0){kolizia_znacka=1;change = !0}}
+				else if(rnext[ri]==p_odznac[p_set]){kolizia_znacka=0;change = !0}
+				
+				else if(rnext[ri]==p_most[p_set]){
+					if(kolizia_diera_pred==1&&kolizia_most==0){ // auto build bridge with separate collision control
+						abort=false;
+						for(var i_bri=1;!abort;i_bri++){ // tehla, stena - brick, wall ?
+							if     (karelS==1){q=miestnost(karelX,karelY+i_bri,karelZ-1,999);if(q==999||q==1||q==30)abort=true;}
+							else if(karelS==2){q=miestnost(karelX+i_bri,karelY,karelZ-1,999);if(q==999||q==1||q==30)abort=true;}
+							else if(karelS==3){q=miestnost(karelX,karelY-i_bri,karelZ-1,999);if(q==999||q==1||q==30)abort=true;}
+							else if(karelS==4){q=miestnost(karelX-i_bri,karelY,karelZ-1,999);if(q==999||q==1||q==30)abort=true;}						
+							if(!abort){
+								for(var z_bri=2; z_bri < 8 && karelZ-z_bri > 0 && !abort; z_bri++){ // stlp - main wall ?
+									if     (karelS==1&&miestnost(karelX,karelY+i_bri,karelZ-z_bri,999)==30)abort=true;
+									else if(karelS==2&&miestnost(karelX+i_bri,karelY,karelZ-z_bri,999)==30)abort=true;
+									else if(karelS==3&&miestnost(karelX,karelY-i_bri,karelZ-z_bri,999)==30)abort=true;
+									else if(karelS==4&&miestnost(karelX-i_bri,karelY,karelZ-z_bri,999)==30)abort=true;
+								}
+							}
+							
+							if(!abort){ // no colision, continue
+								if     (karelS==1)miestnost(karelX,karelY+i_bri,karelZ,40);
+								else if(karelS==2)miestnost(karelX+i_bri,karelY,karelZ,40);
+								else if(karelS==3)miestnost(karelX,karelY-i_bri,karelZ,40);
+								else if(karelS==4)miestnost(karelX-i_bri,karelY,karelZ,40);
+								change = !0;
+							}
+						}
+					}
+				}
+				else if(rnext[ri]==p_poloz[p_set]){ 
+					limitrobota = vyska_tehal-(karelZ-1); //alert(vyska_tehal + ' ' + limitrobota)
+					if(kolizia_stena == 0 && vyska_tehal < 15 && limitrobota < 10 && limitrobota > -2){
+						if     (karelS==1){miestnost(karelX,karelY+1,vyska_tehal+2,miestnost(karelX,karelY+1,vyska_tehal+1,999));miestnost(karelX,karelY+1,vyska_tehal+1,1)}
+						else if(karelS==2){miestnost(karelX+1,karelY,vyska_tehal+2,miestnost(karelX+1,karelY,vyska_tehal+1,999));miestnost(karelX+1,karelY,vyska_tehal+1,1)}
+						else if(karelS==3){miestnost(karelX,karelY-1,vyska_tehal+2,miestnost(karelX,karelY-1,vyska_tehal+1,999));miestnost(karelX,karelY-1,vyska_tehal+1,1)}
+						else if(karelS==4){miestnost(karelX-1,karelY,vyska_tehal+2,miestnost(karelX-1,karelY,vyska_tehal+1,999));miestnost(karelX-1,karelY,vyska_tehal+1,1)}
+						change = !0;
+					}
+				}
+				else if(rnext[ri]==p_zdvihni[p_set]){ 
+					limitrobota = vyska_tehal-(karelZ-1);
+					if(kolizia_stena == 0 && vyska_tehal > 0 && limitrobota < 11 && limitrobota > -1){
+						if     (karelS==1){miestnost(karelX,karelY+1,vyska_tehal,miestnost(karelX,karelY+1,vyska_tehal+1,999));mst_del(karelX,karelY+1,vyska_tehal+1)}
+						else if(karelS==2){miestnost(karelX+1,karelY,vyska_tehal,miestnost(karelX+1,karelY,vyska_tehal+1,999));mst_del(karelX+1,karelY,vyska_tehal+1)}
+						else if(karelS==3){miestnost(karelX,karelY-1,vyska_tehal,miestnost(karelX,karelY-1,vyska_tehal+1,999));mst_del(karelX,karelY-1,vyska_tehal+1)}
+						else if(karelS==4){miestnost(karelX-1,karelY,vyska_tehal,miestnost(karelX-1,karelY,vyska_tehal+1,999));mst_del(karelX-1,karelY,vyska_tehal+1)}
+						change = !0;
+					}
+				}			
+				else if(rnext[ri]==p_krok[p_set]){			
+					if(polkrok==0){
+						polkrok=karelS; sett=90;
+						change= !0;			
+					}
+					else{
+						if(kolizia_volno==0){
+							if(kolizia_znacka == 1){miestnost(karelX,karelY,karelZ,2);kolizia_znacka = 0}
+							if(kolizia_most == 1){miestnost(karelX,karelY,karelZ,40);kolizia_most = 0}
+							
+							if     (karelS==1)karelY++; else if(karelS==2)karelX++;
+							else if(karelS==3)karelY--; else if(karelS==4)karelX--;
+							// vyskoc
+							if ((kolizia_tehla==1 || kolizia_most_vyskoc==1) && karelZ <= miesz)karelZ++;
+							
+							if(miestnost(karelX,karelY,karelZ,999)==2)kolizia_znacka=1; else
+							if(miestnost(karelX,karelY,karelZ,999)==40)kolizia_most=1;
+						}
+						polkrok= 0;
+						change= !0;
+					}
+				}
+				else if(rnext[ri]==p_stena[p_set]){ //main wall
+					limitrobota=vyska_tehal-(karelZ-1); //alert(vyska_tehal + ' ' + limitrobota)
+					if(kolizia_stena==0 && vyska_tehal < 15 && limitrobota < 10 && limitrobota > -2){ //create
+						if     (karelS==1)miestnost(karelX,karelY+1,vyska_tehal+1,30);
+						else if(karelS==2)miestnost(karelX+1,karelY,vyska_tehal+1,30);
+						else if(karelS==3)miestnost(karelX,karelY-1,vyska_tehal+1,30);
+						else if(karelS==4)miestnost(karelX-1,karelY,vyska_tehal+1,30);
+						change = !0;
+					} else
+					if(kolizia_stena==1 && limitrobota < 11 && limitrobota > -2){ // destroy
+						if     (karelS==1&&karelY<miesy)mst_del_up(karelX,karelY+1,vyska_tehal+1);
+						else if(karelS==2&&karelX<miesx)mst_del_up(karelX+1,karelY,vyska_tehal+1);
+						else if(karelS==3&&karelY>1)mst_del_up(karelX,karelY-1,vyska_tehal+1);
+						else if(karelS==4&&karelX>1)mst_del_up(karelX-1,karelY,vyska_tehal+1);
+						change= !0;
+					}
+				}
+				
+				// zvlastne prikazy
+				else if(rnext[ri]==p_pravda[p_set]){sett = 0;status_pravda = true}
+				else if(rnext[ri]==p_nepravda[p_set]){sett = 0;status_pravda = false}
+				else if(rnext[ri]==p_rychlo[p_set]){rychlo = true}
+				else if(rnext[ri]==p_pomaly[p_set]){rychlo = rychlejsie = false}
+				else if(rnext[ri]==p_rychlejsie[p_set]){rychlejsie = true}    // set faster (visible move)
+				else if(rnext[ri]==p_stop[p_set]){
+					abort=false;sett=0;
+					for(ric=ri+1;ric<orgnext && !abort;ric++){ // najdi stop: ak existuje za stop a preskoc tam
+						reknext--; 
+						if(rnext[ric]==p_stop[p_set]+':')abort=true;
+					}
+					if(abort==false)reknext=1;//nenasiel, zastav uplne
+				}
+				
+				// specialne prikazy
+				else if(rnext[ri]==p_miestnost[p_set]){ // direct control, clean room, load room
+					abort=false; var n=0;
+					for(ric=ri+1;ric<orgnext && !abort;ric++){  // vytiahni udaj cislo 1
+						reknext--; 
+						if(rnext[ric]!=' '&&rnext[ric]!=''){ 
+							n=Number(rnext[ric]); abort=true}
+					}
+					if(abort && n==1){ // vymaz miestnost - clear
+						ri = orgnext - reknext; ignore=1; kolizia_znacka = 0; kolizia_most = 0;			
+						karelX = karelY = karelZ = karelS = 1 // Smer 1 2 3 4
+						for(var x=1;x<=miesx;x++)for(var y=1;y<=miesy;y++)for(var z=1;z<=miesz+1;z++)miestnost(x,y,z,0);				
+						change = !0;
+					}else if(abort && n==2){ //nahraj miestnost z tech view - load
+						ri=orgnext-reknext; ignore=1; kolizia_znacka=0;	 kolizia_most = 0;		
+						karelX=karelY=karelZ=karelS=1 // Smer 1 2 3 4
+						for(var x=1;x<=miesx;x++)for(var y=1;y<=miesy;y++)for(var z=1;z<=miesz+1;z++)miestnost(x,y,z,0);
+						
+						var techl=techm.value.split('\n'), lng=techl.length;
+						for(var tl=0;tl<lng;tl++){
+							var tltxt = techl[tl].split('-');
+							var tlx = tltxt[0].split('.');
+							if(tlx[0]=='X'){
+								tly = tltxt[1].split('.');
+								tlz = tltxt[2].split('.');
+								if(tlx[0]=='X'&&tly[0]=='Y'&&tlz[0]=='ZK'){
+									karelX = Number(tlx[1]); karelY = Number(tly[1]); karelZ = Number(tlz[1]); karelS = 1;}
+								if(tlx[0]=='X'&&tly[0]=='Y'&&tlz[0]=='ZT'){
+									for(var il=Number(tlz[1]);il>=1;il--){miestnost(Number(tlx[1]),Number(tly[1]),il,1)}
+								}
+								if(tlx[0]=='X'&&tly[0]=='Y'&&tlz[0]=='ZS'){
+									miestnost(Number(tlx[1]),Number(tly[1]),Number(tlz[1]),30);
+									for(var il=Number(tlz[1])-1;il>=1;il--){miestnost(Number(tlx[1]),Number(tly[1]),il,1)}
+								}
+								if(tlx[0]=='X'&&tly[0]=='Y'&&tlz[0]=='ZZ'){
+									miestnost(Number(tlx[1]),Number(tly[1]),Number(tlz[1]),2);
+									for(var il=Number(tlz[1])-1;il>=1;il--){miestnost(Number(tlx[1]),Number(tly[1]),il,1)}
+								}
+								if(tlx[0]=='X'&&tly[0]=='Y'&&tlz[0]=='ZB'){
+									miestnost(Number(tlx[1]),Number(tly[1]),Number(tlz[1]),40);
+								}
+							}
+						}					
+						if(miestnost(karelX,karelY,karelZ,999)==2)kolizia_znacka=1; //stoji na znacke - stay on mark ?
+						if(miestnost(karelX,karelY,karelZ,999)==40)kolizia_most=1; //stoji na moste - stay on bridge ?
+						change= !0;
+					}else{ // len fokus na priame ovladanie - direct
+						window.setTimeout(function(){graph.focus();}, 20);
+					}
+				}
+				else if(rnext[ri]==p_slovnik[p_set]){
+					infob.value=''; sett=0;
+					dialog = w_prikazy[p_set];				//txtarea(dialog);
+				}
+				else if(rnext[ri]==p_save[p_set]){
+					filename='karel.txt';
+					savevalue=commd.value				
+					saveme(savevalue, filename, 'text/plain');
+				}
+				else if(rnext[ri]==p_load[p_set]){
+					filename='karel.txt'; savevalue=false;		
+					savevalue = loadme(filename);
+					if(savevalue){
+						commd.value += '\n'+savevalue}
+					else{dialog += ' '+w_chyba[p_set]+', CHECK IF THIS BROWSER SUPPORT LOAD LOCAL FILE ( SECURITY ISSUE )'}
+				}
+				else if(rnext[ri]==p_tak[p_set]||rnext[ri]==p_krat[p_set]||rnext[ri]==' '||rnext[ri]==''||rnext[ri]==p_hkym[p_set]||rnext[ri]==p_rob[p_set]
+					  ||rnext[ri]==p_hak[p_set]||rnext[ri]==p_inak[p_set]||rnext[ri]==p_hurob[p_set]||ignore==1)
+					  {sett=0} // nevsimaj si a rychlo pokracuj
+				
+				// language
+				else if(p_jazyk.indexOf(rnext[ri]) > -1){ //change language
+					preloz(p_set,p_jazyk.indexOf(rnext[ri])); //translate commands in window
+					p_set = p_jazyk.indexOf(rnext[ri]);
+					dialg.value='>' + p_slovnik[p_set];
+					infob.value='';
+					dialog= w_intro[p_set]; 
+					change= !0; sett = 0;
+				}
+				else if(rnext[ri].slice(-1)==':'){sett=0} // must be last before simple else
+				
+				// custom command or number
+				else{				
+					var nu = Number(rnext[ri]), nl=0; sett=0; // it is number or command?
+					if(nu>0&&ri>0)for(var mnu=0;mnu<nu-1;mnu++)vrattelo[mnu]=rnext[ri-1]; else if(nu!=0){
+						// VLASTNE PRIKAZY
+						mojeprikazy(rnext[ri],vrattelo); //alert(vrattelo[0]);
+						//is number after main command ?
+						nl=vrattelo.length;
+						if(ri<orgnext&&nl>0){
+							nu = Number(rnext[ri+1]);
+							if(nu>0){rnext[ri+1]='0';for(var mnu=0;mnu<nu-1;mnu++)vrattelo[nl+mnu]=rnext[ri];}}
+					}
+					nl=vrattelo.length; 
+					if(nl>0){//znamy prikaz
+						orgnext=(orgnext+nl)-1;reknext=reknext+nl;
+						rnext[ri]=vrattelo[0]; // nahrad existujuci riadok 
+						for(var mp=1;mp<nl;mp++){    // vloz nove riadky - ak je ich viac
+							rnext.splice(ri+mp,0,vrattelo[mp]);	
+							rr_arch.splice(ri+mp,0,vrattelo[mp]); //rovnako koli org urob poctom uprav arch
+						}
+					}
+					else{
+						if(nu!=0){
+						// neznamy prikaz
+						if(pipni==0){dialog = w_nepoznam[p_set]+' '+rnext[ri]}
+						else{dialog = dialog+' '+rnext[ri]};
+						pipni = 1;
+						}
+					}
+				}
+				
+				if(rnext[ri]!=p_krok[p_set] && polkrok!=0)polkrok=0; //anti glitch
+				
+				if(polkrok==0){
+					if(sett!=0)stepsnumber++;
+					
+					reknext -= 1;
+					
+					if(rychlejsie && sett!=0)sett=1;
+					if(rychlo){
+						sett=0; repeater = true;//commands(rnext,reknext,orgnext);
+					}else{
+						if(sett==1){ repeater = true;//commands(rnext,reknext,orgnext); 
+						}else{ 
+							setTimeout(function(){commands(rnext,reknext,orgnext)},sett);}
+					}
+				}else{
+					if(rychlejsie && sett!=0)sett=1;
+					if(rychlo){
+						sett=0; repeater = true; //commands(rnext,reknext,orgnext)
+					}else{
+						//if(sett==1){ repeater = true; //commands(rnext,reknext,orgnext); 
+						//}else{ 
+							setTimeout(function(){commands(rnext,reknext,orgnext)},sett);//}
+					}
+				}
+			}else{
+				// end of commands
+				rychlo=false; rychlejsie=false; // fast and faster
+				txtarea(dialog);
+			}
+		}
+	} // repeater
+}
+// delete all bridges and connected bridges
+function mst_del(mst_x,mst_y,mst_z){   // RECURSION IN PRAXIS (but JavaScript not support stack for local variables ..)	 
+	var mst_a=[], mst_b=[], mst_c=[], mst_d=[], mst_i=[]; //  (..then must be created main stack with local{var} array..)
+	var abort0 = []; 
+	var mst_co = -1;
+	function _mst_del(mst_x,mst_y,mst_z){
+		mst_co = mst_co + 1;                              //  (..and main stack counter)
+		miestnost(mst_x,mst_y,mst_z,0); // delete position
+		abort0[mst_co]=false; mst_a[mst_co]=mst_b[mst_co]=mst_c[mst_co]=mst_d[mst_co] = 0;
+		for(mst_i[mst_co]=1;!abort0[mst_co];mst_i[mst_co]++){ // and delete connected bridge in recursive
+			if(mst_a[mst_co]!=-1){mst_a[mst_co]=mst_ret(mst_x+mst_i[mst_co],mst_y,mst_z);
+				if(mst_a[mst_co]!=40)mst_a[mst_co]=-1;else {_mst_del(mst_x+mst_i[mst_co],mst_y,mst_z);mst_co--;}}
+			if(mst_b[mst_co]!=-1){mst_b[mst_co]=mst_ret(mst_x-mst_i[mst_co],mst_y,mst_z);
+				if(mst_b[mst_co]!=40)mst_b[mst_co]=-1;else {_mst_del(mst_x-mst_i[mst_co],mst_y,mst_z);mst_co--;}}
+			if(mst_c[mst_co]!=-1){mst_c[mst_co]=mst_ret(mst_x,mst_y+mst_i[mst_co],mst_z);
+				if(mst_c[mst_co]!=40)mst_c[mst_co]=-1;else {_mst_del(mst_x,mst_y+mst_i[mst_co],mst_z);mst_co--;}}
+			if(mst_d[mst_co]!=-1){mst_d[mst_co]=mst_ret(mst_x,mst_y-mst_i[mst_co],mst_z);
+				if(mst_d[mst_co]!=40)mst_d[mst_co]=-1;else {_mst_del(mst_x,mst_y-mst_i[mst_co],mst_z);mst_co--;}}
+			
+			if(mst_a[mst_co]==-1 && mst_b[mst_co]==-1 && mst_c[mst_co]==-1 && mst_d[mst_co]==-1)abort0[mst_co]=true;
+		}
+	}
+	_mst_del(mst_x,mst_y,mst_z);
+}
+// delete bridges connected to wall
+function mst_del_up(mstup_x,mstup_y,mstup_z){ 
+	miestnost(mstup_x,mstup_y,mstup_z,0);
+	for(var n = 1; n < 8; n++)mst_del(mstup_x,mstup_y,mstup_z + n);	
+	//delete on top when is not line continue
+	if(miestnost(mstup_x,mstup_y,mstup_z+8,999)==40){
+		var nc=0;
+		miestnost(mstup_x,mstup_y,mstup_z + 8,1); // temp block
+		if(mst_ret(mstup_x+1,mstup_y,mstup_z+8)!=40 && miestnost(mstup_x+1,mstup_y,mstup_z+7,999)!=1 && miestnost(mstup_x+1,mstup_y,mstup_z,999)!=30 && mst_ret(mstup_x-1,mstup_y,mstup_z+8)==40){nc++; mst_del(mstup_x-1,mstup_y,mstup_z + 8)}
+		if(mst_ret(mstup_x-1,mstup_y,mstup_z+8)!=40 && miestnost(mstup_x-1,mstup_y,mstup_z+7,999)!=1 && miestnost(mstup_x-1,mstup_y,mstup_z,999)!=30 && mst_ret(mstup_x+1,mstup_y,mstup_z+8)==40){nc++; mst_del(mstup_x+1,mstup_y,mstup_z + 8)}
+		if(mst_ret(mstup_x,mstup_y+1,mstup_z+8)!=40 && miestnost(mstup_x,mstup_y+1,mstup_z+7,999)!=1 && miestnost(mstup_x,mstup_y+1,mstup_z,999)!=30 && mst_ret(mstup_x,mstup_y-1,mstup_z+8)==40){nc++; mst_del(mstup_x,mstup_y-1,mstup_z + 8)}
+		if(mst_ret(mstup_x,mstup_y-1,mstup_z+8)!=40 && miestnost(mstup_x,mstup_y-1,mstup_z+7,999)!=1 && miestnost(mstup_x,mstup_y-1,mstup_z,999)!=30 && mst_ret(mstup_x,mstup_y+1,mstup_z+8)==40){nc++; mst_del(mstup_x,mstup_y+1,mstup_z + 8)}
+		miestnost(mstup_x,mstup_y,mstup_z + 8,40); // temp un-block
+		
+		if(miestnost(mstup_x,mstup_y-1,mstup_z+8,999)!=40 && miestnost(mstup_x,mstup_y+1,mstup_z+8,999)!=40 && miestnost(mstup_x+1,mstup_y,mstup_z+8,999)!=40 && miestnost(mstup_x-1,mstup_y,mstup_z+8,999)!=40)nc=nc+2;
+		if(nc>=2)miestnost(mstup_x,mstup_y,mstup_z + 8,0);
+	}
+}
+function mst_ret(mmx,mmy,mmz){ // return 40 if Karel stay on bridge
+	var ret = miestnost(mmx,mmy,mmz,999);
+	if(ret==0 && mmx==karelX && mmy==karelY && mmz==karelZ && kolizia_most==1 && miestnost(mmx,mmy,mmz-8,999)!=30){ret=40;kolizia_most=0} // stay on bridge
+	if(ret==40 && miestnost(mmx,mmy,mmz-8,999)==30)ret=0; // bridge is on main wall, dont destroy
+	return ret;
+}
+// main commands
+function mojeprikazy(prikaz,telo){ 
+	// najdi vo vlastnych prikazoch // okno s moje prikazy
+	var moje=commd.value; moje=moje.toUpperCase(); 
+	
+	// remove notes
+	var lines=moje.split('\n'); // break the textblock into an array of lines
+	var count=lines.length, j = 0;
+	for( var i=0; i<count; i++ ){ 
+        j=lines[i].search('//'); // note symbol: //	
+        if(j > -1){
+		    lines[i]=lines[i].slice(0, j);
+		}
+	}
+    moje=lines.join('\n'); // join the array back into a single string
+	
+	// remove abnormals
+	moje=moje.replace(/,/g,''); moje=moje.replace(/\./g,'');
+	moje=moje.removeDiacritics();					
+	
+	//rozbi moje prikazy
+	var rrm=moje.replace(/\n/g,' ').split(' '); 
+	rrm=rrm.filter(function(n){return n!=undefined && n!=''});
+	var rrl=rrm.length;
+	
+	abort=false; var n=0;
+	for(mpr=0;mpr<rrl && !abort;mpr++){
+		if(rrm[mpr]==p_prikaz[p_set])n=1;
+		if(rrm[mpr]==p_zaciatok[p_set]&&n==2)abort=true;
+		if(rrm[mpr]==p_koniec[p_set])abort=false;
+		if(rrm[mpr]==prikaz)n++;
+	}
+	if(abort){ //nasiel
+		abort=false;n=0;var nrych=0;
+		for(mpre=mpr;mpre<rrl && !abort;mpre++){ //pohladaj koniec
+			if(rrm[mpre]==p_koniec[p_set])abort=true;
+			if(!abort){telo[n]=rrm[mpre];n++;if(rrm[mpre]==p_rychlo[p_set])nrych++;else if(rrm[mpre]==p_pomaly[p_set])nrych--;}
+		}
+		if(nrych>0){telo[n]=p_pomaly[p_set];n++}
+	}
+}
+function txtarea(dial){
+	if(!dca){ // ak nie je priame ovladanie
+		var textarea = infob.value; 
+		var lines = textarea.split('\n'); // break the textblock into an array of lines
+		var count = lines.length;
+		if (count > 5){ //delete first line		
+			lines.splice(0,1); // remove one line, starting at the first position			
+			textarea = lines.join('\n'); // join the array back into a single string
+		}
+		infob.value = textarea + dial + '\n'; 
+	}
+	if(pipni==1)beep();        
+}
+function karel_smer(ksmer){
+	if(ksmer==1){return 3;}else if(ksmer==2){return 4;}else if(ksmer==3){return 5;}else if(ksmer==4){return 6;}
+}
+function return_set(prkz){
+	if(prkz==p_nie[p_set])set_no=true;
+	if(prkz==p_tehla[p_set])set_tehla=true;
+	if(prkz==p_znacka[p_set])set_znacka=true;
+	if(prkz==p_stena[p_set])set_stena=true;
+	if(prkz==p_volno[p_set])set_volno=true;
+	if(prkz==p_pravda[p_set])set_pravda=true;
+	if(prkz==p_nepravda[p_set])set_nepravda=true;
+	if(prkz==p_jama[p_set])set_jama=true;
+	if(prkz==p_most[p_set])set_most=true;
+}
+function check_set(){
+	if( 
+	   ((!set_no && set_tehla && vyska_tehal > 0) || (set_no && set_tehla && vyska_tehal==0) || !set_tehla)
+	 &&((!set_no && set_znacka && kolizia_znacka==1) || (set_no && set_znacka && kolizia_znacka==0) || !set_znacka)
+	 &&((!set_no && set_stena && kolizia_stena==1) || (set_no && set_stena && kolizia_stena==0) || !set_stena)
+	 &&((!set_no && set_volno && kolizia_volno==0) || (set_no && set_volno && kolizia_volno==1) || !set_volno)
+	 &&((!set_no && set_pravda && status_pravda) || (set_no && set_pravda && !status_pravda) || !set_pravda)
+	 &&((!set_no && set_nepravda && !status_pravda) || (set_no && set_nepravda && status_pravda) || !set_nepravda)
+	 &&((!set_no && set_jama && kolizia_diera_pred==1) || (set_no && set_jama && kolizia_diera_pred==0) || !set_jama)
+	 &&((!set_no && set_most && kolizia_most_vstup==1) || (set_no && set_most && kolizia_most_vstup==0) || !set_most)
+		)
+	{return false}else{return true}
+}
+function kolizie(){
+	var m=0;
+	kolizia_stena = kolizia_volno = kolizia_tehla = kolizia_diera = vyska_tehal = kolizia_diera_pred = 0;
+	kolizia_most_vstup = kolizia_most_vyskoc = 0;
+	if((karelS==1 && karelY==miesy)||(karelS==2 && karelX==miesx)||(karelS==3 && karelY==1)||(karelS==4 && karelX==1)){
+		kolizia_stena = 1; kolizia_volno = 1;
+	}
+	if(kolizia_stena==0){ // check custom wall and: // zmeraj vrchna tehla
+		// zmeraj vrchna tehla		
+		for(var zzz=1;zzz<=miesz+1;zzz++){ //t.j. je tehla pre podmienku ak viac ako 0 // +1: for bridge on top (array Z=16)
+			if(karelS==1)m = miestnost(karelX,karelY+1,zzz,999); else
+			if(karelS==2)m = miestnost(karelX+1,karelY,zzz,999); else
+			if(karelS==3)m = miestnost(karelX,karelY-1,zzz,999); else
+			if(karelS==4)m = miestnost(karelX-1,karelY,zzz,999);
+			
+			if(m==1)vyska_tehal++; else
+			if(m==30&&zzz>=karelZ-7){kolizia_stena = 1; kolizia_volno = 1} else
+			if(m==30&&zzz<karelZ-7){kolizia_stena = 1; kolizia_volno = 1; kolizia_diera_pred = 1; } else
+			if(m==40&&zzz>karelZ+1&&zzz<karelZ+8)kolizia_volno = 1; else //narazi do mosta
+			if(m==40&&kolizia_stena==1&&zzz<=karelZ+1)kolizia_volno = 0; //nenarazi do mosta a je nad stlpikom, uvolni cestu
+			
+			if(m==40&&kolizia_volno==0&&zzz<=karelZ)kolizia_most_vstup=1; //je pred karlom most na ktory moze ist
+			if(m==40&&kolizia_volno==0&&zzz==karelZ+1){kolizia_most_vstup=1;kolizia_most_vyskoc=1} //je pred karlom most na ktory moze vyskocit
+		}
+	}
+	if(karelZ>1){		
+		inx = index3(karelX,karelY,karelZ-1); // je pod diera ?
+		if(miest[inx]!=1 && kolizia_most==0)kolizia_diera = 1; // || miest[inx] == null
+		
+		inx = index3(karelX,karelY,karelZ-7); // is down hole ? ( no wall down ? )
+		if(miest[inx]==30 && kolizia_most==0)kolizia_diera = 0;
+		
+		if(kolizia_stena == 0 || ( kolizia_volno==0 && kolizia_stena == 1))  // je pred nim diera ?
+			if(   (karelS==1 && miest[index3(karelX,karelY+1,karelZ-1)]!=1)
+				||(karelS==2 && miest[index3(karelX+1,karelY,karelZ-1)]!=1)
+				||(karelS==3 && miest[index3(karelX,karelY-1,karelZ-1)]!=1)
+				||(karelS==4 && miest[index3(karelX-1,karelY,karelZ-1)]!=1) )
+				kolizia_diera_pred = 1;
+	}
+	if(kolizia_stena == 0 || ( kolizia_volno==0 && kolizia_stena == 1)){
+		if( karelZ < miesz ){
+			if(   (karelS==1 && miest[index3(karelX,karelY+1,karelZ+1)] == 1)
+				||(karelS==2 && miest[index3(karelX+1,karelY,karelZ+1)] == 1)
+				||(karelS==3 && miest[index3(karelX,karelY-1,karelZ+1)] == 1)
+				||(karelS==4 && miest[index3(karelX-1,karelY,karelZ+1)] == 1) ){
+				kolizia_tehla = 1; kolizia_volno = 1; //2 a viactehal pred karlom
+			}
+		}
+		if(kolizia_tehla == 0){
+			if(   (karelS==1 && miest[index3(karelX,karelY+1,karelZ)] == 1)
+				||(karelS==2 && miest[index3(karelX+1,karelY,karelZ)] == 1)
+				||(karelS==3 && miest[index3(karelX,karelY-1,karelZ)] == 1)
+				||(karelS==4 && miest[index3(karelX-1,karelY,karelZ)] == 1) ){
+				kolizia_tehla = 1; // jedna = stupienok
+			}
+		}		
+	}
+}
+function preloz(fromL,intoL){ //translate
+	var ca = commd; // commands area
+	var data = ''; var spc = 0, spc_old = 0;
+	var calines = ca.value.split('\n');
+	ca.value = ''; var lngh=calines.length;
+	for(var cai=0;cai<lngh;cai++){
+		catxt = calines[cai];		
+		catxt = catxt.replace(/,/g,''); catxt = catxt.replace(/\./g,'');
+		catxt = catxt.removeDiacritics();
+
+		var caword = catxt.split(' '), trn=0; //trn help correct translate identical word MARK, STEIN
+		caword = caword.filter(function(n){return n!=undefined && n!=''}); //odstrani medzery na zaciatku
+		var lngi=caword.length;
+		var ltxt = '';
+		for(var caj=0;caj<lngi;caj++){
+			var prelozene = false;
+			var cat = caword[caj].toUpperCase();
+			if(p_jazyk[fromL]==cat){cat=p_jazyk[intoL];prelozene=true}
+			else if(p_urob[fromL]==cat){cat=p_urob[intoL];prelozene=true}
+			else if(p_krat[fromL]==cat){cat=p_krat[intoL];prelozene=true;		spc++;}
+			else if(p_hurob[fromL]==cat){cat=p_hurob[intoL];prelozene=true;		spc--; spc_old--;}
+			else if(p_ak[fromL]==cat){cat=p_ak[intoL];prelozene=true;trn=1}
+			else if(p_tak[fromL]==cat){cat=p_tak[intoL];prelozene=true;trn=0;	spc++;}
+			else if(p_hak[fromL]==cat){cat=p_hak[intoL];prelozene=true;trn=0;   spc--; spc_old--;}
+			else if(p_inak[fromL]==cat){cat=p_inak[intoL];prelozene=true;trn=0}
+			else if(p_kym[fromL]==cat){cat=p_kym[intoL];prelozene=true;trn=1}
+			else if(p_rob[fromL]==cat){cat=p_rob[intoL];prelozene=true;trn=0;	spc++;}
+			else if(p_hkym[fromL]==cat){cat=p_hkym[intoL];prelozene=true;trn=0; spc--; spc_old--;}
+			else if(p_vlavo[fromL]==cat){cat=p_vlavo[intoL];prelozene=true}
+			else if(p_vpravo[fromL]==cat){cat=p_vpravo[intoL];prelozene=true}
+			else if(p_pip[fromL]==cat){cat=p_pip[intoL];prelozene=true}
+			else if(p_oznac[fromL]==cat && trn==0){cat=p_oznac[intoL];prelozene=true}
+			else if(p_odznac[fromL]==cat){cat=p_odznac[intoL];prelozene=true}
+			else if(p_poloz[fromL]==cat && trn==0){cat=p_poloz[intoL];prelozene=true}
+			else if(p_zdvihni[fromL]==cat){cat=p_zdvihni[intoL];prelozene=true}
+			else if(p_krok[fromL]==cat){cat=p_krok[intoL];prelozene=true}
+			else if(p_miestnost[fromL]==cat){cat=p_miestnost[intoL];prelozene=true}
+			else if(p_slovnik[fromL]==cat){cat=p_slovnik[intoL];prelozene=true}
+			else if(p_prikaz[fromL]==cat){cat=p_prikaz[intoL];prelozene=true}
+			else if(p_zaciatok[fromL]==cat){cat=p_zaciatok[intoL];prelozene=true;spc++;}
+			else if(p_koniec[fromL]==cat){cat=p_koniec[intoL];prelozene=true;	 spc--; spc_old--;}
+			else if(p_nie[fromL]==cat){cat=p_nie[intoL];prelozene=true}
+			else if(p_tehla[fromL]==cat && trn==1){cat=p_tehla[intoL];prelozene=true}
+			else if(p_znacka[fromL]==cat && trn==1){cat=p_znacka[intoL];prelozene=true}
+			else if(p_stena[fromL]==cat){cat=p_stena[intoL];prelozene=true}
+			else if(p_volno[fromL]==cat){cat=p_volno[intoL];prelozene=true}
+			else if(p_je[fromL]==cat){cat=p_je[intoL];prelozene=true}
+			else if(p_rychlo[fromL]==cat){cat=p_rychlo[intoL];prelozene=true}
+			else if(p_rychlejsie[fromL]==cat){cat=p_rychlejsie[intoL];prelozene=true}
+			else if(p_pomaly[fromL]==cat){cat=p_pomaly[intoL];prelozene=true}
+			else if(p_pravda[fromL]==cat){cat=p_pravda[intoL];prelozene=true}
+			else if(p_nepravda[fromL]==cat){cat=p_nepravda[intoL];prelozene=true}
+			else if(p_jama[fromL]==cat){cat=p_jama[intoL];prelozene=true}
+			else if(p_sever[fromL]==cat){cat=p_sever[intoL];prelozene=true}
+			else if(p_most[fromL]==cat){cat=p_most[intoL];prelozene=true}
+			else if(p_stop[fromL]==cat){cat=p_stop[intoL];prelozene=true}
+			else if(p_stop[fromL]+':'==cat){cat=p_stop[intoL]+':';prelozene=true}
+			
+			ltxt = ltxt + cat + ' ';
+			//if(prelozene){ca.value = ca.value + cat + ' '}else{ca.value = ca.value + caword[caj] + ' '}
+		}
+		ltxt = ltxt.slice(0, -1);
+		if ( spc < 0 ) spc = 0; 
+		if ( spc_old < 0 ) spc_old = 0;
+		for ( var i = 1; i<=spc_old; i++ ) ltxt = '  ' + ltxt; // format code to structure
+		spc_old = spc;
+		data = data + ltxt + '\n';
+		
+		//ca.value = ca.value + '\n';
+	}
+	if( data.length > 0 ) data = data.slice(0, -1);
+	data = data.toLowerCase();
+	ca.value = data;
+}
+function beep(){
+    var snd = new Audio('data:audio/wav;base64,//uQRAAAAWMSLwUIYAAsYkXgoQwAEaYLWfkWgAI0wWs/ItAAAGDgYtAgAyN+QWaAAihwMWm4G8QQRDiMcCBcH3Cc+CDv/7xA4Tvh9Rz/y8QADBwMWgQAZG/ILNAARQ4GLTcDeIIIhxGOBAuD7hOfBB3/94gcJ3w+o5/5eIAIAAAVwWgQAVQ2ORaIQwEMAJiDg95G4nQL7mQVWI6GwRcfsZAcsKkJvxgxEjzFUgfHoSQ9Qq7KNwqHwuB13MA4a1q/DmBrHgPcmjiGoh//EwC5nGPEmS4RcfkVKOhJf+WOgoxJclFz3kgn//dBA+ya1GhurNn8zb//9NNutNuhz31f////9vt///z+IdAEAAAK4LQIAKobHItEIYCGAExBwe8jcToF9zIKrEdDYIuP2MgOWFSE34wYiR5iqQPj0JIeoVdlG4VD4XA67mAcNa1fhzA1jwHuTRxDUQ//iYBczjHiTJcIuPyKlHQkv/LHQUYkuSi57yQT//uggfZNajQ3Vmz+Zt//+mm3Wm3Q576v////+32///5/EOgAAADVghQAAAAA//uQZAUAB1WI0PZugAAAAAoQwAAAEk3nRd2qAAAAACiDgAAAAAAABCqEEQRLCgwpBGMlJkIz8jKhGvj4k6jzRnqasNKIeoh5gI7BJaC1A1AoNBjJgbyApVS4IDlZgDU5WUAxEKDNmmALHzZp0Fkz1FMTmGFl1FMEyodIavcCAUHDWrKAIA4aa2oCgILEBupZgHvAhEBcZ6joQBxS76AgccrFlczBvKLC0QI2cBoCFvfTDAo7eoOQInqDPBtvrDEZBNYN5xwNwxQRfw8ZQ5wQVLvO8OYU+mHvFLlDh05Mdg7BT6YrRPpCBznMB2r//xKJjyyOh+cImr2/4doscwD6neZjuZR4AgAABYAAAABy1xcdQtxYBYYZdifkUDgzzXaXn98Z0oi9ILU5mBjFANmRwlVJ3/6jYDAmxaiDG3/6xjQQCCKkRb/6kg/wW+kSJ5//rLobkLSiKmqP/0ikJuDaSaSf/6JiLYLEYnW/+kXg1WRVJL/9EmQ1YZIsv/6Qzwy5qk7/+tEU0nkls3/zIUMPKNX/6yZLf+kFgAfgGyLFAUwY//uQZAUABcd5UiNPVXAAAApAAAAAE0VZQKw9ISAAACgAAAAAVQIygIElVrFkBS+Jhi+EAuu+lKAkYUEIsmEAEoMeDmCETMvfSHTGkF5RWH7kz/ESHWPAq/kcCRhqBtMdokPdM7vil7RG98A2sc7zO6ZvTdM7pmOUAZTnJW+NXxqmd41dqJ6mLTXxrPpnV8avaIf5SvL7pndPvPpndJR9Kuu8fePvuiuhorgWjp7Mf/PRjxcFCPDkW31srioCExivv9lcwKEaHsf/7ow2Fl1T/9RkXgEhYElAoCLFtMArxwivDJJ+bR1HTKJdlEoTELCIqgEwVGSQ+hIm0NbK8WXcTEI0UPoa2NbG4y2K00JEWbZavJXkYaqo9CRHS55FcZTjKEk3NKoCYUnSQ0rWxrZbFKbKIhOKPZe1cJKzZSaQrIyULHDZmV5K4xySsDRKWOruanGtjLJXFEmwaIbDLX0hIPBUQPVFVkQkDoUNfSoDgQGKPekoxeGzA4DUvnn4bxzcZrtJyipKfPNy5w+9lnXwgqsiyHNeSVpemw4bWb9psYeq//uQZBoABQt4yMVxYAIAAAkQoAAAHvYpL5m6AAgAACXDAAAAD59jblTirQe9upFsmZbpMudy7Lz1X1DYsxOOSWpfPqNX2WqktK0DMvuGwlbNj44TleLPQ+Gsfb+GOWOKJoIrWb3cIMeeON6lz2umTqMXV8Mj30yWPpjoSa9ujK8SyeJP5y5mOW1D6hvLepeveEAEDo0mgCRClOEgANv3B9a6fikgUSu/DmAMATrGx7nng5p5iimPNZsfQLYB2sDLIkzRKZOHGAaUyDcpFBSLG9MCQALgAIgQs2YunOszLSAyQYPVC2YdGGeHD2dTdJk1pAHGAWDjnkcLKFymS3RQZTInzySoBwMG0QueC3gMsCEYxUqlrcxK6k1LQQcsmyYeQPdC2YfuGPASCBkcVMQQqpVJshui1tkXQJQV0OXGAZMXSOEEBRirXbVRQW7ugq7IM7rPWSZyDlM3IuNEkxzCOJ0ny2ThNkyRai1b6ev//3dzNGzNb//4uAvHT5sURcZCFcuKLhOFs8mLAAEAt4UWAAIABAAAAAB4qbHo0tIjVkUU//uQZAwABfSFz3ZqQAAAAAngwAAAE1HjMp2qAAAAACZDgAAAD5UkTE1UgZEUExqYynN1qZvqIOREEFmBcJQkwdxiFtw0qEOkGYfRDifBui9MQg4QAHAqWtAWHoCxu1Yf4VfWLPIM2mHDFsbQEVGwyqQoQcwnfHeIkNt9YnkiaS1oizycqJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=');  
+    snd.play();
+}
+//Auto Save and Load to/from local storage (like cookies)
+function saveroom(){
+	if(save){ // MS Edge not locally work 
+	if(typeof window.Storage !== 'undefined'){	    
+		localStorage.karel3droom=techm.value;
+		localStorage.karel3dcmd=commd.value;}
+	}
+}
+function loadroom(){
+	if(typeof window.Storage !== 'undefined'){
+		try { // MS Edge not locally work 
+		if(localStorage.karel3droom){
+			techm.value=localStorage.karel3droom;
+			cmd[0]=p_miestnost[p_set]; cmd[1]='2'; commands(cmd,2,2);}
+		} catch (exception){save = false}
+		if(save){ // Auto Load commands
+			if(localStorage.karel3dcmd){
+				commd.value=localStorage.karel3dcmd;}
+		}
+	}
+}
+// Manual Save Load commands
+function saveme(text, name, types){
+    var a = document.createElement('a');
+    var file = new Blob([text], {type: types});
+    a.href = URL.createObjectURL(file);
+    a.download = name;
+    a.click();
+}
+function loadme(name){ // Chrome not locally work
+	var input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    var a = document.createElement('a');; // opening dialog
+	a.setAttribute('href', name);
+	input.click();
+
+	var loadvalue = false;
+	var rawFile = new XMLHttpRequest();
+    rawFile.onreadystatechange = function(){
+        if(rawFile.readyState == 4){
+            if(rawFile.status == 200 || rawFile.status == 0){
+                loadvalue = rawFile.responseText;
+            }
+        }
+    }
+	rawFile.open('GET', a.href, false);
+	try {
+		rawFile.send();}
+	catch (exception){}
+    return loadvalue;
+}
+</script>
