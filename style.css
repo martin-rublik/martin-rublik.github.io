@@ -16,10 +16,9 @@ H3 {
 	color: #000000;
 }
 P, UL, OL, LI, BLOCKQUOTE {
-	font-size: 12px;
 	padding-left: 3px;
 	margin-left: 10px;
-	width:40em;
+	text-align: justify;
 }
 .generator {
 	color: #666666;
@@ -82,7 +81,6 @@ FORM {
 BODY {
 	background: #ffffff;
 	color: #000000;
-	font-size:12px;
 	margin-left : 10px;
 	margin-top : 5px;
 	margin-right : 10px;
@@ -91,15 +89,20 @@ BODY {
 	background-image : none;
 	background-color : #ffffff;
 }
+.content {
+  max-width: 40em;
+  margin: auto;
+  background: white;
+  padding: 10px;
+}
+
 .rover {
 	color: #909090;
-	font-size: 12px;
 	font-weight: normal;
 }
 .borderwhite { border-color: #F7F3F0; border-width: 6px; }
 .borderblack { border-color: #CCCCFF; border-width: 6px; }
 ul { list-style-image : url("pict/zarazka.jpg");list-style-type: square;}  
-td { font-size : 11px}
 
 .free {color : green;}
 .occ {color : red;}
