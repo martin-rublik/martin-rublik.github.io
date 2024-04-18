@@ -4,6 +4,7 @@ title: "troubleshooting TLS and certificates"
 date: 2024-03-21 08:00:00 +0100
 image: ts-tls/ts-tls-logo.jpg
 tags: tls x509 one-liner
+toc: include
 ---
 Quite a few of my customers had issues with certificates on their web farms,
 Active Directory Federation Services or any other services using TLS
