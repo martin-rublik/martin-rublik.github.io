@@ -155,7 +155,7 @@ list", so I used [Merill's Graph X-Ray
 extension](https://graphxray.merill.net/) to sniff out how it is being done in
 Entra ID portal. Unfortunately no direct command was fetched by Graph X-Ray,
 though you can clearly see that a ```PATCH``` verb was used against an
-enterprise application.
+application registration.
 
 I checked the network trace to reverse engineer the necessary call. The result
 is included in following code snippet.
