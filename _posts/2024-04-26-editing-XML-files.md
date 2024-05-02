@@ -148,14 +148,14 @@ The entire cmdlet would than look like this:
 
 {% include code-button.html %}
 ```powershell
-Set-Config -ConfigFileName web.config -XPath '/configuration/appSettings/add[@key="FileLogLevel"]' -Attribute "findValue" -Value "4"
+Set-Config -ConfigFileName web.config -XPath '/configuration/appSettings/add[@key="FileLogLevel"]' -Attribute "value" -Value "4"
 ```
 
 ### Example 3: Silent usage
 When you want to modify the config file silently, you need to specify ```-Confirm:$false``` parameter. E.g.
 {% include code-button.html %}
 ```powershell
-Set-Config -Confirm:$false -ConfigFileName web.config -XPath '/configuration/appSettings/add[@key="FileLogLevel"]' -Attribute "findValue" -Value "4"
+Set-Config -Confirm:$false -ConfigFileName web.config -XPath '/configuration/appSettings/add[@key="FileLogLevel"]' -Attribute "value" -Value "4"
 ```
 
 
