@@ -3,7 +3,7 @@ layout: post
 title: "automating full synchronization cycle start of an HR driven provisioning connector app"
 date: 2024-04-02 08:00:00 +0100
 image: eid-hr-full-sync/eid-hr-logo.jpg
-tags: entra-id
+tags: entra-id entra-id-governance
 toc: include
 ---
 
