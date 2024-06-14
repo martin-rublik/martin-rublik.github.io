@@ -25,7 +25,7 @@ author:
 description: >- # this means to ignore newlines until "baseurl:"
   A blog on Office 365, Entra ID, Active Directory, identity and access management, PKI, powershell, one-liners and other technical stuff I like.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://martin.rublik.eu" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://jekyll-test.rublik.eu" # the base hostname & protocol for your site, e.g. http://example.com
 
 header_pages:
   - about.md
@@ -36,6 +36,7 @@ remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
   - jemoji  
+  - jekyll-sitemap  
 
 minima:
   skin: dark
