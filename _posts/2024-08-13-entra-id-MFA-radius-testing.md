@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "how to test NPS MFA using radclient"
-date: 2024-08-13 08:00:00 +0100
+date: 2024-10-02 08:00:00 +0100
 image: entra-id-MFA-radius/entra-id-MFA-radius.jpg
 tags: entra-id authentication mfa
 toc: include
