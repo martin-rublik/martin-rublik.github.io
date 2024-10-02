@@ -95,7 +95,7 @@ This script:
 
 Typical output of the script is illustrated by next picture.
 
-{% include gimage.html uri="/assets/pictures/entra-id-MFA-radius/entra-id-radius_nps_extension_config.png" %}
+{% include gimage.html uri="/assets/pictures/entra-id-MFA-radius/entra-id-radius_nps_extension_config.png"%}
 
 ## MFA RADIUS testing with freeradius-utils
 Once the extension is installed and configured, the NPS server will call Entra ID
