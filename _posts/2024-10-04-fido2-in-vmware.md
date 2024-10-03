@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "using FIDO2 keys in VMWare Workstation"
-date: 2024-10-03 20:00:00 +0100
+date: 2024-10-03 19:00:00 +0100
 image: fido2-vmware/fido2-vmware.jpg
 tags: entra-id authentication mfa
 ---
