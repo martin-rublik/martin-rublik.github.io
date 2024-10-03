@@ -3,7 +3,7 @@ layout: post
 title: "using FIDO2 keys in VMWare Workstation"
 date: 2024-10-03 19:00:00 +0100
 image: fido2-vmware/fido2-vmware.jpg
-tags: entra-id authentication mfa
+tags: fido2 authentication
 ---
 
 In the past few months, I've been testing some cool FIDO2 keys. Since I do a lot
