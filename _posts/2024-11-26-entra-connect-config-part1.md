@@ -7,6 +7,13 @@ image: entra-id-custom-claims-testing/entra-id-claims.jpg
 toc: include
 ---
 
+>
+> Yikes, I've hit git push too soon, please come back on Tuesday, hopefully 
+> this will be completed until then.
+> Sorry 😲
+> Until then
+>  UNDER CONSTRUCTION 
+
 I’ve worked with Entra Connect in various scenarios. As the core component of a Hybrid Identity setup, it offers significant flexibility in its configuration.
 
 In this blog post series, I’ll cover:
@@ -89,13 +96,13 @@ To get the module just run
 Install-Module AADC-BackupTools
 ```
 
-
 # Custom rules
+> Will be completed hopefully until Tuesday 4th Feb. 25
 
 
 # Metaverse configuration 
-
+> Will be completed hopefully until Tuesday 4th Feb. 25
 
 # Other Entra Connect configuration
-
+> Will be completed hopefully until Tuesday 4th Feb. 25
 
