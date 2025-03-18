@@ -32,6 +32,7 @@ header_pages:
 
 
 # Build settings
+#  use older minima theme https://github.com/jekyll/minima/issues/858 
 remote_theme: "jekyll/minima@93b1921"
 plugins:
   - jekyll-feed
