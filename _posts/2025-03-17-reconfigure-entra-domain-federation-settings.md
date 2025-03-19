@@ -132,7 +132,7 @@ $params = @{
 
 if ($b64AdfsNextCert)
 {
-    $params.Add('$nextSigningCertificate',$b64AdfsNextCert)
+    $params.Add('nextSigningCertificate',$b64AdfsNextCert)
 }
 
 Update-MgDomainFederationConfiguration -DomainId $domainName -BodyParameter $params -InternalDomainFederationId $graphDomain.Id
