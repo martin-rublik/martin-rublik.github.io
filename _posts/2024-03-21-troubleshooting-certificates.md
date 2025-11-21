@@ -219,7 +219,7 @@ param(
     [string]$ServerName=$HostName,
     [int]$Port=443,
     [System.Security.Authentication.SslProtocols] $TlsVersion = [System.Security.Authentication.SslProtocols]::Tls12,
-    [string]$OutTlsCertFile
+    [string]$OutFile
 )
     $tcpsocket = New-Object Net.Sockets.TcpClient($HostName, $port)
     try
