@@ -4,3 +4,4 @@ _site
 .jekyll-metadata
 start.cmd
 vendor
+.DS_store
