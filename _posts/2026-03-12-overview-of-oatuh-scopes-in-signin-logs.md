@@ -59,6 +59,7 @@ I was too lazy to come with a KQL solution, so I wrote a simple PS script
 that parses the results and checks for requests with low priviledged OAuth
 scopes.
 
+{% include code-button.html %}
 ```powershell
 $queryData=Import-Csv ~\downloads\query_data.csv
 
