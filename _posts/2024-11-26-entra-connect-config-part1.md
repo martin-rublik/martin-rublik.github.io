@@ -12,7 +12,7 @@ toc: include
 > this will be completed until then.
 > Sorry 😲
 > Until then
->  UNDER CONSTRUCTION 
+>  UNDER CONSTRUCTION, ping me if you are interested in finishing this post 😊
 
 I’ve worked with Entra Connect in various scenarios. As the core component of a Hybrid Identity setup, it offers significant flexibility in its configuration.
 
@@ -97,12 +97,12 @@ Install-Module AADC-BackupTools
 ```
 
 # Custom rules
-> Will be completed hopefully until Tuesday 4th Feb. 25
+> Will be completed hopefully if anyone needs it
 
 
 # Metaverse configuration 
-> Will be completed hopefully until Tuesday 4th Feb. 25
+> Will be completed hopefully if anyone needs it
 
 # Other Entra Connect configuration
-> Will be completed hopefully until Tuesday 4th Feb. 25
+> Will be completed hopefully if anyone needs it
 
