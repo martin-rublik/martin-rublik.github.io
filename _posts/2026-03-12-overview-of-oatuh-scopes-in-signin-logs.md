@@ -42,7 +42,7 @@ After the change the `CA Policy 01` will be enforced as well.
 The following Kusto query can be used to identify affected applications:
 
 {% include code-button.html %}
-```kql
+```
 SigninLogs
 | where TimeGenerated > ago(120d)
 | extend APD=todynamic(AuthenticationProcessingDetails)
