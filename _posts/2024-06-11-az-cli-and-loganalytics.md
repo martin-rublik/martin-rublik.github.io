@@ -3,7 +3,7 @@ layout: post
 title: "troubleshooting log analytcis queries from az-cli"
 date: 2024-06-11 08:00:00 +0100
 image: az-cli-and-loganalytics/az-cli-and-loganalytics.jpg
-tags: powershell troubleshooting log-analytics tls
+tags: powershell troubleshooting log-analytics tls kusto
 toc: include
 ---
 

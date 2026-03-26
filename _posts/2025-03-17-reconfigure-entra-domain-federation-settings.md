@@ -2,7 +2,7 @@
 layout: post
 title: "MSOL decommisioning and emergency Entra ID federated domain trust repair"
 date: 2025-03-17 08:00:00 +0100
-tags: entra-id authentication
+tags: entra-id authentication mg-graph
 image: 202503-entra-id-fed-repair/202503-entra-id-fed-repair.jpg
 toc: include
 ---
