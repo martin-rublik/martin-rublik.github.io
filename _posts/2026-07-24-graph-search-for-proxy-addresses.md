@@ -47,7 +47,7 @@ In practice, this filter matches an object if at least one value in proxyAddress
 # The command
 The resulting command is then
 ```powershell
-Get-MgUser -Filter "proxyAddresses/any(p:endsWith(p,'$domainToRemove')) and onPremisesSyncEnabled eq true" `
+Get-MgUser -Filter "proxyAddresses/any(p:endsWith(p,'@contoso.com')) and onPremisesSyncEnabled eq true" `
 -ConsistencyLevel eventual `
 -CountVariable countvar `
 -All
