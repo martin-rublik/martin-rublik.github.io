@@ -31,6 +31,8 @@ The tricky part is that proxyAddresses is multivalued. This is where the [Graph 
 The documentation includes also some examples. For example, the imAddresses property of the
 user resource contains a collection of String primitive types. The following
 query retrieves only users with at least one imAddress of admin@contoso.com.
+
+{% include code-button.html %}
 ```powershell
 Import-Module Microsoft.Graph.Users
 
@@ -46,6 +48,8 @@ In practice, this filter matches an object if at least one value in proxyAddress
 
 # The command
 The resulting command is then
+
+{% include code-button.html %}
 ```powershell
 Get-MgUser -Filter "proxyAddresses/any(p:endsWith(p,'@contoso.com')) and onPremisesSyncEnabled eq true" `
 -ConsistencyLevel eventual `
