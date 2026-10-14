@@ -4,24 +4,33 @@ title: PS> $(whoami)
 permalink: /about/
 ---
 
-## Martin Rublík
-Technical IT guy, specialties: 
-- :blue_heart: powershell, bash
-- Identity and Access Management 
-- Active Directory 
-- Microsoft 365 and Entra ID 
-- Microsoft Information Protection / Enterprise Rights Management and Data Loss Prevention.
-- Cloud Security 
-- X.509 certificates, Public Key Infrastructure, Cryptography and smart-cards 
-- Computer and Network Security
+# Martin Rublík
+Identity and Microsoft 365 architect, engineer and occasional PowerShell
+enthusiast.
 
-I have: 
-- implemented multiple public key infrastructures with 20K+ subscribers/end entities, 
-- participated on large (10.000+ users) and smaller M365 tenant-to-tenant migrations (responsible especially for identity and access management and identity transfer), 
-- designed identity synchronization infrastructures and authentication infrastructures in large companies (50K+ users), 
-- performed on-prem to cloud migrations / cutover migrations for small companies (approx. 100 users).
+I work mostly with Microsoft Entra ID, hybrid identity, identity and access
+management, Microsoft 365, Active Directory, PKI and security.
 
-### Education
+I like problems that sit somewhere between architecture and troubleshooting:
+identity synchronization, authentication and federation, tenant migrations,
+application integrations, Conditional Access, permissions, certificates, strange
+Graph behavior and the occasional issue that only appears in production.
+
+My professional background includes:
+* designing identity synchronization and authentication infrastructures for
+  environments with 50,000+ users,
+* participating in large Microsoft 365 tenant-to-tenant migrations, with a focus
+  on identity, access and migration dependencies,
+* implementing PKI environments with 20,000+ subscribers,
+* Microsoft Information Protection / Purview, DLP and cloud security,
+* Active Directory, AD FS, Entra Connect and Microsoft Identity Manager,
+* :blue_heart: PowerShell :blue_heart:, Microsoft Graph and automation.
+
+I still prefer understanding how things actually work over treating technology
+as a black box. Most posts here originate from something I had to investigate,
+test, fix or explain at work.
+
+# Education
 [Faculty of Economic Informatics, Economic University, Bratislava](https://www.euba.sk)
 - 2005 - 2010
 - Ph.D. in Economic Informatics
@@ -32,14 +41,15 @@ I have:
 - Mgr. (MSc.) in Informatics
 - Master thesis regarding electronic signatures from technical and law perspective.
 
-### Publications, presentations and tools
+# Publications, presentations and tools
+- [json-regex-search](https://github.com/martin-rublik/json-regex-search)
 - [github publications and presentations repository](https://github.com/martin-rublik/publications)
+- [HRProvisioningTests](https://github.com/martin-rublik/HRProvisioningTests)
 - [powershell profile](https://github.com/martin-rublik/psprofile)
-- [EntraID-TokenTools](https://www.powershellgallery.com/packages/EntraID-TokenTools/1.0.4)
 - [Get-SAMLMetadata](https://www.powershellgallery.com/packages/FedMetadata/1.0.2/Content/Get-SAMLMetadata.ps1)
 - [Error Lookup Tool Wrapper](https://winerr.azurewebsites.net/)
 
-### Certifications
+# Certifications
 CISSP License ID: 384919
 - ISC2 Certified Information Systems Security Professional
 
